@@ -1,8 +1,8 @@
-package com.drzenovka.scrolls.common.block;
+package com.drzenovka.scrolls.common.init;
 
+import com.drzenovka.scrolls.common.block.BlockHangingScroll;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 
 public class ModBlocks {
 
@@ -11,7 +11,7 @@ public class ModBlocks {
 
     public static void init() {
         // If you ever want scrolls as placeable blocks
-        pinnedScroll = new BlockPinnedScroll();
+        pinnedScroll = new BlockHangingScroll();
         GameRegistry.registerBlock(pinnedScroll, "pinnedScroll");
     }
 }

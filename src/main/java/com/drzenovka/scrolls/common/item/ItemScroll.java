@@ -1,17 +1,23 @@
 package com.drzenovka.scrolls.common.item;
 
-import com.drzenovka.scrolls.gui.GuiScroll;
+import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
+import com.drzenovka.scrolls.client.gui.GuiScroll;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Facing;
 import net.minecraft.world.World;
-import net.minecraft.util.EnumFacing;
 
 public class ItemScroll extends Item {
 
     public static final String NBT_PAGE = "page";
+
+    public ItemScroll() {
+        this.setUnlocalizedName("scroll");
+        this.setMaxStackSize(16);
+    }
 
     /** Initialize NBT for a new scroll */
     private void initNBT(ItemStack stack) {
@@ -34,42 +40,71 @@ public class ItemScroll extends Item {
     }
 
     @Override
-    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
-        initNBT(stack);
-    }
-
-    @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (world.isRemote) {
-            int handSlot = player.inventory.currentItem;
-            Minecraft.getMinecraft().displayGuiScreen(new GuiScroll(player, handSlot));
+        // Open GUI only when NOT sneaking
+        if (world.isRemote && !player.isSneaking()) {
+            Minecraft.getMinecraft().displayGuiScreen(
+                new GuiScroll(player, player.inventory.currentItem)
+            );
         }
         return stack;
     }
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world,
-                             int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        if (world.isRemote) return true;
+                             int x, int y, int z, int side,
+                             float hitX, float hitY, float hitZ) {
 
-        EnumFacing facing = EnumFacing.getFront(side);
-        int posX = x + facing.getFrontOffsetX();
-        int posY = y + facing.getFrontOffsetY();
-        int posZ = z + facing.getFrontOffsetZ();
+        // Only place scroll when sneaking
+        if (!player.isSneaking()) return false;
 
-        // Spawn pinned scroll entity
-        com.drzenovka.scrolls.common.entity.EntityHangingScroll entity =
-            new com.drzenovka.scrolls.common.entity.EntityHangingScroll(world, posX, posY, posZ, facing.ordinal(), stack);
+        // Only horizontal walls
+        if (side < 2) return false;
 
-        if (entity.onValidSurface()) {
-            world.spawnEntityInWorld(entity);
+        int offsetX = Facing.offsetsXForSide[side];
+        int offsetY = Facing.offsetsYForSide[side];
+        int offsetZ = Facing.offsetsZForSide[side];
 
+        int placeX = x + offsetX;
+        int placeY = y + offsetY;
+        int placeZ = z + offsetZ;
+
+        if (!player.canPlayerEdit(placeX, placeY, placeZ, side, stack)) return false;
+
+        // Map side to EntityHangingScroll direction
+        int direction = switch (side) {
+            case 2 -> 0; // north
+            case 3 -> 1; // south
+            case 4 -> 2; // west
+            case 5 -> 3; // east
+            default -> 0;
+        };
+
+        EntityHangingScroll scrollEntity = new EntityHangingScroll(world, placeX, placeY, placeZ, direction);
+
+        // Transfer NBT
+        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_PAGE)) {
+            scrollEntity.setScrollText(stack.getTagCompound().getString(NBT_PAGE));
+        }
+
+        // Validate surface (must be solid behind scroll)
+        if (!scrollEntity.onValidSurface()) return false;
+
+        if (!world.isRemote) {
+            world.spawnEntityInWorld(scrollEntity);
             if (!player.capabilities.isCreativeMode) {
-                stack.stackSize--;
+                --stack.stackSize;
             }
         }
 
         return true;
+    }
+
+
+
+    @Override
+    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
+        initNBT(stack);
     }
 
     @Override

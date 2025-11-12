@@ -3,9 +3,9 @@ package com.drzenovka.scrolls.common.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 
-public class BlockPinnedScroll extends Block {
+public class BlockHangingScroll extends Block {
 
-    public BlockPinnedScroll() {
+    public BlockHangingScroll() {
         super(Material.wood);  // protected constructor is fine here
         setBlockName("pinnedScroll");
         setBlockTextureName("scrolls:pinned_scroll");

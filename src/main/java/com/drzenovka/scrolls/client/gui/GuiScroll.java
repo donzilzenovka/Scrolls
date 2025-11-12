@@ -1,8 +1,8 @@
-package com.drzenovka.scrolls.gui;
+package com.drzenovka.scrolls.client.gui;
 
 import com.drzenovka.scrolls.common.item.ItemScroll;
 import com.drzenovka.scrolls.network.PacketSaveScroll;
-import com.drzenovka.scrolls.Scrolls;
+import com.drzenovka.scrolls.common.core.Scrolls;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +25,12 @@ public class GuiScroll extends GuiScreen {
     private static final int MAX_LINES = 10;
     private static final int MAX_CHARS_PER_LINE = 13;
     private static final ResourceLocation BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg.png");
+
+    public GuiScroll(EntityPlayer player, ItemStack scrollStack) {
+        this.player = player;
+        this.stack = scrollStack;
+        this.handSlot = 0;
+    }
 
     public GuiScroll(EntityPlayer player, int handSlot) {
         this.player = player;
@@ -127,6 +133,9 @@ public class GuiScroll extends GuiScreen {
 
     /** Save text to stack and sync with server */
     private void saveText() {
+        ItemStack stack = player.inventory.getStackInSlot(handSlot);
+        if (stack == null || !(stack.getItem() instanceof ItemScroll)) return;
+
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < MAX_LINES; i++) {
             sb.append(lines[i]);
@@ -138,9 +147,10 @@ public class GuiScroll extends GuiScreen {
         if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setString(ItemScroll.NBT_PAGE, pageText);
 
+        player.inventory.setInventorySlotContents(handSlot, stack);
+
         // Sync with server
-        Scrolls.proxy.NETWORK.sendToServer(
-            new PacketSaveScroll(handSlot, pageText)
+        Scrolls.NETWORK.sendToServer(new PacketSaveScroll(handSlot, pageText)
         );
     }
 }

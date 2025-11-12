@@ -1,8 +1,7 @@
-package com.drzenovka.scrolls.common;
+package com.drzenovka.scrolls.common.init;
 
 import com.drzenovka.scrolls.common.item.ItemScroll;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.item.Item;
 
 public class ModItems {
 

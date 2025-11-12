@@ -1,10 +1,13 @@
-package com.drzenovka.scrolls.gui;
+package com.drzenovka.scrolls.client.gui;
 
+import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
 import cpw.mods.fml.common.network.IGuiHandler;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public class ScrollGuiHandler implements IGuiHandler {
+
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -13,11 +16,22 @@ public class ScrollGuiHandler implements IGuiHandler {
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        // For scroll GUI, open for the currently held item
         if (ID == 0) {
+            // x is actually the entity ID
+            if (x > 0) {
+                Entity e = world.getEntityByID(x);
+                if (e instanceof EntityHangingScroll) {
+                    EntityHangingScroll scroll = (EntityHangingScroll) e;
+                    //return new GuiScroll(player, scroll.getScrollStack()); // pass the scroll's ItemStack
+                }
+            }
+
+            // fallback: current held item
             int handSlot = player.inventory.currentItem;
             return new GuiScroll(player, handSlot);
         }
         return null;
     }
+
+
 }
