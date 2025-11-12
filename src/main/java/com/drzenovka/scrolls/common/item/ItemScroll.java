@@ -65,31 +65,36 @@ public class ItemScroll extends Item {
         int offsetY = Facing.offsetsYForSide[side];
         int offsetZ = Facing.offsetsZForSide[side];
 
-        int placeX = x + offsetX;
-        int placeY = y + offsetY;
-        int placeZ = z + offsetZ;
 
-        if (!player.canPlayerEdit(placeX, placeY, placeZ, side, stack)) return false;
+
+        if (!player.canPlayerEdit(x, y, z, side, stack)) return false;
 
         // Map side to EntityHangingScroll direction
         int direction = switch (side) {
-            case 2 -> 0; // north
-            case 3 -> 1; // south
-            case 4 -> 2; // west
+            case 2 -> 2; // north
+            case 3 -> 0; // south
+            case 4 -> 1; // west
             case 5 -> 3; // east
             default -> 0;
         };
+        // ItemScroll.java (in onItemUse)
 
-        EntityHangingScroll scrollEntity = new EntityHangingScroll(world, placeX, placeY, placeZ, direction);
+// ...
+        if (!player.canPlayerEdit(x, y, z, side, stack)) return false;
+
+        System.out.println("Block at (x,y,z) is solid: " + world.getBlock(x, y, z).getMaterial().isSolid());
+
+// ... (rest of the ItemUse method)
+        EntityHangingScroll scrollEntity = new EntityHangingScroll(world, x, y, z, direction);
 
         // Transfer NBT
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_PAGE)) {
             scrollEntity.setScrollText(stack.getTagCompound().getString(NBT_PAGE));
         }
-
+        System.out.println("check validity");
         // Validate surface (must be solid behind scroll)
         if (!scrollEntity.onValidSurface()) return false;
-
+        System.out.println("Is valid");
         if (!world.isRemote) {
             world.spawnEntityInWorld(scrollEntity);
             if (!player.capabilities.isCreativeMode) {

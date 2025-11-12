@@ -11,53 +11,34 @@ import net.minecraft.world.World;
 public class EntityHangingScroll extends EntityHanging {
 
     private String scrollText = "";
-    public static final int WIDTH_PIXELS = 16;
-    public static final int HEIGHT_PIXELS = 16;
+    public static final int WIDTH_PIXELS = 8;
+    public static final int HEIGHT_PIXELS = 8;
+
+    public EntityHangingScroll(World world) {
+        super(world);
+    }
 
     public EntityHangingScroll(World world, int x, int y, int z, int side) {
-        super(world, x, y, z, 0); // direction will be set by setDirection
-        this.setDirectionFromSide(side);
+        super(world, x, y, z, side); // direction will be set by setDirection
+        this.field_146063_b = x; // Wall X
+        this.field_146064_c = y; // Wall Y
+        this.field_146062_d = z; // Wall Z
+
+        // You MUST call setPosition again after manually setting posX/Y/Z
+        // to update the internal entity bounding box list reference.
+        this.setDirection(side);
+
+        // 4. (Optional) Rotation yaw for rendering
+        switch (side) {
+            case 2 -> this.rotationYaw = 180.0F; // north (Z-)
+            case 0 -> this.rotationYaw = 0.0F;   // south (Z+)
+            case 1 -> this.rotationYaw = 90.0F;  // west (X-)
+            case 3 -> this.rotationYaw = -90.0F; // east (X+)
+        }
+
     }
 
-    /** Sets the scroll's facing and bounding box automatically based on wall side */
-    public void setDirectionFromSide(int side) {
-        this.hangingDirection = side;
 
-        switch (side) {
-            case 2 -> this.rotationYaw = 180.0F; // north
-            case 3 -> this.rotationYaw = 0.0F;   // south
-            case 4 -> this.rotationYaw = 90.0F;  // west
-            case 5 -> this.rotationYaw = -90.0F; // east
-            default -> this.rotationYaw = 0.0F;
-        }
-
-        double xOffset = 0.5D;
-        double yOffset = 0.5D;
-        double zOffset = 0.5D;
-
-        switch (side) {
-            case 2 -> zOffset -= 0.5D;
-            case 3 -> zOffset += 0.5D;
-            case 4 -> xOffset -= 0.5D;
-            case 5 -> xOffset += 0.5D;
-        }
-
-        this.setPosition(this.posX + xOffset, this.posY + yOffset, this.posZ + zOffset);
-
-        float width = WIDTH_PIXELS / 16.0F;
-        float height = HEIGHT_PIXELS / 16.0F;
-        this.setSize(width, height);
-
-        // Depth adjustment per facing
-        float depth = 0.0625F;
-        if (side == 2 || side == 3) { // north/south
-            this.boundingBox.minZ = this.posZ - depth;
-            this.boundingBox.maxZ = this.posZ + depth;
-        } else { // west/east
-            this.boundingBox.minX = this.posX - depth;
-            this.boundingBox.maxX = this.posX + depth;
-        }
-    }
 
 
     /** Scroll text */
