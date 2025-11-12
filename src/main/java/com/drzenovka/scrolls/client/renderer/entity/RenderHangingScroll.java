@@ -13,7 +13,7 @@ public class RenderHangingScroll extends Render {
         new ResourceLocation("scrolls", "textures/entity/hanging_scroll.png");
 
     public RenderHangingScroll() {
-        this.shadowSize = 0.5F;
+        this.shadowSize = 0.0F;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class RenderHangingScroll extends Render {
         if (!(entity instanceof EntityHangingScroll scroll)) return;
 
         GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+        GL11.glTranslated(x, y, z);
         GL11.glRotatef(scroll.rotationYaw, 0, 1, 0);
         bindEntityTexture(scroll);
 
@@ -37,16 +37,19 @@ public class RenderHangingScroll extends Render {
 
         // Render text
         GL11.glTranslatef(0F, 0F, -0.001F); // slightly above surface
-        GL11.glScalef(0.01F, -0.01F, 0.01F);
+        GL11.glRotatef(180F,0F,1F, 0F);
+        GL11.glScalef(0.005F, -0.005F, 0.005F);
         FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-        String text = scroll.getScrollText();
+        String text = "Butts";
+        text = scroll.getScrollText();
+
 
         if (!text.isEmpty()) {
             int width = fr.getStringWidth(text);
             fr.drawString(text, -width / 2, 0, 0x3F2F1A);
         }
 
-        GL11.glEnable(GL11.GL_LIGHTING);
+        //GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
     }
 

@@ -10,36 +10,20 @@ import net.minecraft.world.World;
 
 public class EntityHangingScroll extends EntityHanging {
 
-    private String scrollText = "";
+    private String scrollText = "Test";
     public static final int WIDTH_PIXELS = 8;
     public static final int HEIGHT_PIXELS = 8;
 
+    //needed for class to work
     public EntityHangingScroll(World world) {
         super(world);
     }
 
     public EntityHangingScroll(World world, int x, int y, int z, int side) {
         super(world, x, y, z, side); // direction will be set by setDirection
-        this.field_146063_b = x; // Wall X
-        this.field_146064_c = y; // Wall Y
-        this.field_146062_d = z; // Wall Z
-
-        // You MUST call setPosition again after manually setting posX/Y/Z
-        // to update the internal entity bounding box list reference.
         this.setDirection(side);
 
-        // 4. (Optional) Rotation yaw for rendering
-        switch (side) {
-            case 2 -> this.rotationYaw = 180.0F; // north (Z-)
-            case 0 -> this.rotationYaw = 0.0F;   // south (Z+)
-            case 1 -> this.rotationYaw = 90.0F;  // west (X-)
-            case 3 -> this.rotationYaw = -90.0F; // east (X+)
-        }
-
     }
-
-
-
 
     /** Scroll text */
     public void setScrollText(String text) {
@@ -82,4 +66,6 @@ public class EntityHangingScroll extends EntityHanging {
         }
         this.entityDropItem(drop, 0.0F);
     }
+
+
 }

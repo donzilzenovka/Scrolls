@@ -61,12 +61,6 @@ public class ItemScroll extends Item {
         // Only horizontal walls
         if (side < 2) return false;
 
-        int offsetX = Facing.offsetsXForSide[side];
-        int offsetY = Facing.offsetsYForSide[side];
-        int offsetZ = Facing.offsetsZForSide[side];
-
-
-
         if (!player.canPlayerEdit(x, y, z, side, stack)) return false;
 
         // Map side to EntityHangingScroll direction
@@ -77,22 +71,14 @@ public class ItemScroll extends Item {
             case 5 -> 3; // east
             default -> 0;
         };
-        // ItemScroll.java (in onItemUse)
 
-// ...
-        if (!player.canPlayerEdit(x, y, z, side, stack)) return false;
-
-        System.out.println("Block at (x,y,z) is solid: " + world.getBlock(x, y, z).getMaterial().isSolid());
-
-// ... (rest of the ItemUse method)
         EntityHangingScroll scrollEntity = new EntityHangingScroll(world, x, y, z, direction);
 
         // Transfer NBT
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_PAGE)) {
             scrollEntity.setScrollText(stack.getTagCompound().getString(NBT_PAGE));
         }
-        System.out.println("check validity");
-        // Validate surface (must be solid behind scroll)
+
         if (!scrollEntity.onValidSurface()) return false;
         System.out.println("Is valid");
         if (!world.isRemote) {
@@ -101,7 +87,6 @@ public class ItemScroll extends Item {
                 --stack.stackSize;
             }
         }
-
         return true;
     }
 
