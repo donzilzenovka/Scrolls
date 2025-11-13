@@ -93,6 +93,6 @@ public class ItemScroll extends Item {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, java.util.List list, boolean advanced) {
-        list.add("A writable length of paper");
+        list.add("A Writable length of paper");
     }
 }
