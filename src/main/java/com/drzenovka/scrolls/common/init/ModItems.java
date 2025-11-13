@@ -13,7 +13,7 @@ public class ModItems {
         scroll = new ItemScroll();
         scroll.setUnlocalizedName("scroll")
             .setTextureName("scrolls:scroll")
-            .setMaxStackSize(16)
+            .setMaxStackSize(1)
             .setCreativeTab(net.minecraft.creativetab.CreativeTabs.tabMisc);
 
         // Register with GameRegistry

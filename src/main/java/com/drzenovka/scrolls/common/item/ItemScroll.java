@@ -9,9 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import java.util.Objects;
+
 public class ItemScroll extends Item {
 
     public static final String NBT_PAGE = "page";
+    public static final String NBT_AUTHOR = "author";
 
     public ItemScroll() {
         this.setUnlocalizedName("scroll");
@@ -93,6 +96,18 @@ public class ItemScroll extends Item {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, java.util.List list, boolean advanced) {
-        list.add("A Writable length of paper");
+        if (!stack.hasTagCompound()) {
+            list.add("Blank");
+            return;
+        }
+        NBTTagCompound tag = stack.getTagCompound();
+        String editor = tag.getString(NBT_AUTHOR);
+        System.out.println(NBT_AUTHOR);
+
+        if (editor != null && !editor.isEmpty()) {
+            list.add("Last inscribed by " + editor);
+        } else {
+            list.add("Blank");
+        }
     }
 }

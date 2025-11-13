@@ -34,10 +34,19 @@ public class GuiScroll extends GuiScreen {
 
     private void initLinesFromStack() {
         if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
-        String saved = stack.getTagCompound().getString(ItemScroll.NBT_PAGE);
-        lines = saved.isEmpty() ? new String[MAX_LINES] : saved.split("\n", MAX_LINES);
+        lines = new String[MAX_LINES];
+        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(ItemScroll.NBT_PAGE)) {
+            String saved = stack.getTagCompound().getString(ItemScroll.NBT_PAGE);
+            if (saved != null && !saved.isEmpty()) {
+                String[] split = saved.split("\n", MAX_LINES);
+                for (int i = 0; i < split.length && i < MAX_LINES; i++) {
+                    lines[i] = split[i] != null ? split[i] : "";
+                }
+            }
+        }
+// Fill any remaining lines with empty strings
         for (int i = 0; i < MAX_LINES; i++) {
-            if (i >= lines.length || lines[i] == null) lines[i] = "";
+            if (lines[i] == null) lines[i] = "";
         }
     }
 
@@ -132,11 +141,15 @@ public class GuiScroll extends GuiScreen {
             if (i < MAX_LINES - 1) sb.append("\n");
         }
         String pageText = sb.toString();
+        String pageAuthor = player.getDisplayName();
 
         if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setString(ItemScroll.NBT_PAGE, pageText);
+        NBTTagCompound tag = stack.getTagCompound();
+
+        tag.setString(ItemScroll.NBT_PAGE, pageText);
+        tag.setString(ItemScroll.NBT_AUTHOR, pageAuthor);  // track last editor
 
         player.inventory.setInventorySlotContents(handSlot, stack);
-        Scrolls.NETWORK.sendToServer(new PacketSaveScroll(handSlot, pageText));
+        Scrolls.NETWORK.sendToServer(new PacketSaveScroll(handSlot, pageText, pageAuthor));
     }
 }
