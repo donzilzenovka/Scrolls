@@ -86,8 +86,6 @@ public class ItemScroll extends Item {
         return true;
     }
 
-
-
     @Override
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         initNBT(stack);
@@ -95,6 +93,6 @@ public class ItemScroll extends Item {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, java.util.List list, boolean advanced) {
-        list.add("A magical scroll with a single page.");
+        list.add("A writable length of paper");
     }
 }

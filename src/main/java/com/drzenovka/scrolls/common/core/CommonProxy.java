@@ -11,8 +11,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class CommonProxy implements IGuiHandler {
 
-    public final int GUI_ID_IMMIXER = 0;
-
     public void init() {
         registerHandlers();
     }

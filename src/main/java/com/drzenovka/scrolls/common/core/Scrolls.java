@@ -4,6 +4,8 @@ import com.drzenovka.scrolls.common.handler.ConfigHandler;
 import com.drzenovka.scrolls.common.init.ModBlocks;
 import com.drzenovka.scrolls.common.init.ModEntities;
 import com.drzenovka.scrolls.common.init.ModItems;
+import com.drzenovka.scrolls.common.init.ModOreDict;
+import com.drzenovka.scrolls.common.init.ModRecipes;
 import com.drzenovka.scrolls.network.PacketSaveScroll;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -51,6 +53,8 @@ public class Scrolls {
         ModBlocks.init();
         ModItems.init();
         ModEntities.init();
+        ModRecipes.init();
+        ModOreDict.init();
     }
 
     @Mod.EventHandler
