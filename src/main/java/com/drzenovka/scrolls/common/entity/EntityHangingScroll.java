@@ -75,12 +75,6 @@ public class EntityHangingScroll extends EntityItemFrame {
         // Always create NBT, even if scrollText is empty
         if (!drop.hasTagCompound()) drop.setTagCompound(new NBTTagCompound());
         drop.getTagCompound().setString(ItemScroll.NBT_PAGE, this.scrollText != null ? this.scrollText : "");
-
-
-        //if (!this.scrollText.isEmpty()) {
-        //    drop.setTagCompound(new NBTTagCompound());
-        //    drop.getTagCompound().setString("page", this.scrollText);
-        //}
         this.entityDropItem(drop, 0.0F);
     }
 }

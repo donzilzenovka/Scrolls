@@ -1,6 +1,8 @@
 package com.drzenovka.scrolls.client.gui;
 
 import com.drzenovka.scrolls.common.item.ItemScroll;
+import com.drzenovka.scrolls.common.item.ItemScrollStamped;
+import com.drzenovka.scrolls.common.util.ColorUtils;
 import com.drzenovka.scrolls.network.PacketSaveScroll;
 import com.drzenovka.scrolls.common.core.Scrolls;
 import net.minecraft.client.gui.GuiButton;
@@ -23,7 +25,18 @@ public class GuiScroll extends GuiScreen {
     private int cursorTick = 0;
 
     public static final int MAX_LINES = 10;
-    private static final ResourceLocation BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg.png");
+    //private static final ResourceLocation BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg.png");
+
+    //int colorMeta = stack.getItemDamage();
+    //private static final ResourceLocation BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg_" + ColorUtils.COLOR_NAMES[colorMeta] + ".png");
+
+    private static final ResourceLocation[] STAMP_TEXTURES = new ResourceLocation[16];
+    static {
+        String[] colorNames = ColorUtils.COLOR_NAMES;
+        for (int i = 0; i < 16; i++) {
+            STAMP_TEXTURES[i] = new ResourceLocation("scrolls", "textures/gui/stamp_" + colorNames[i] + ".png");
+        }
+    }
 
     public GuiScroll(EntityPlayer player, int handSlot) {
         this.player = player;
@@ -58,7 +71,7 @@ public class GuiScroll extends GuiScreen {
         int x = (width - 100) / 2;
         int y = (height - 160) / 2;
 
-        buttonList.add(new GuiButton(0, x + 75, y + 145, 20, 20, "[X]"));
+        buttonList.add(new GuiButton(0, x + 75, y + 145, 30, 20, "Save"));
         Keyboard.enableRepeatEvents(true);
     }
 
@@ -110,6 +123,16 @@ public class GuiScroll extends GuiScreen {
         int y = (height - guiHeight) / 2;
 
         GL11.glColor4f(1f, 1f, 1f, 1f);
+        ResourceLocation BG_TEXTURE;
+
+        if (stack != null) {
+            int meta = stack.getItemDamage();
+            if (meta < 0 || meta >= ColorUtils.COLOR_NAMES.length) meta = 0;
+            BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_" + ColorUtils.COLOR_NAMES[meta] + ".png");
+        } else {
+            // fallback to plain white scroll
+            BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg.png");
+        }
         mc.getTextureManager().bindTexture(BG_TEXTURE);
         drawTexturedModalRect(x, y, 0, 0, guiWidth, guiHeight);
 
@@ -126,6 +149,12 @@ public class GuiScroll extends GuiScreen {
             int cursorX = x + LEFT_MARGIN + fontRendererObj.getStringWidth(textBeforeCursor);
             int cursorY = y + TOP_MARGIN + cursorLine * lineHeight;
             fontRendererObj.drawString("_", cursorX, cursorY, 0x000000);
+        }
+
+        if (stack.getItem() instanceof ItemScrollStamped) {
+            int meta = stack.getItemDamage();
+            mc.getTextureManager().bindTexture(STAMP_TEXTURES[meta]);
+            drawTexturedModalRect(x + 60, y + 120, 0, 0, 16, 16); // bottom-right wax seal
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);

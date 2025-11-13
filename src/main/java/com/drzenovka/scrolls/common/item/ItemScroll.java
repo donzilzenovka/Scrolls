@@ -16,9 +16,12 @@ public class ItemScroll extends Item {
     public static final String NBT_PAGE = "page";
     public static final String NBT_AUTHOR = "author";
 
+
     public ItemScroll() {
-        this.setUnlocalizedName("scroll");
-        this.setMaxStackSize(16);
+        this.setUnlocalizedName("scroll")
+            .setTextureName("scrolls:scroll")
+            .setMaxStackSize(1)
+            .setCreativeTab(net.minecraft.creativetab.CreativeTabs.tabMisc);
     }
 
     /** Initialize NBT for a new scroll */
@@ -102,7 +105,6 @@ public class ItemScroll extends Item {
         }
         NBTTagCompound tag = stack.getTagCompound();
         String editor = tag.getString(NBT_AUTHOR);
-        System.out.println(NBT_AUTHOR);
 
         if (editor != null && !editor.isEmpty()) {
             list.add("Last inscribed by " + editor);
