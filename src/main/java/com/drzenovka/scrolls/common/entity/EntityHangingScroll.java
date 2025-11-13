@@ -2,15 +2,15 @@ package com.drzenovka.scrolls.common.entity;
 
 import com.drzenovka.scrolls.common.init.ModItems;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityHanging;
+import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class EntityHangingScroll extends EntityHanging {
+public class EntityHangingScroll extends EntityItemFrame {
 
-    private String scrollText = "Test";
+    private String scrollText = "Dr Zenovka was here";
     public static final int WIDTH_PIXELS = 8;
     public static final int HEIGHT_PIXELS = 8;
 
@@ -25,26 +25,36 @@ public class EntityHangingScroll extends EntityHanging {
 
     }
 
-    /** Scroll text */
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        // index 30 is usually safe for mod entities; vanilla ItemFrame stops earlier
+        this.dataWatcher.addObject(30, "");
+    }
+
     public void setScrollText(String text) {
         this.scrollText = text;
+        // keep both in sync
+        this.dataWatcher.updateObject(30, text == null ? "" : text);
     }
 
     public String getScrollText() {
-        return this.scrollText;
+        // always prefer synced watcher value
+        return this.dataWatcher.getWatchableObjectString(30);
     }
 
     /** Save/load NBT */
     @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
-        nbt.setString("ScrollText", this.scrollText == null ? "" : this.scrollText);
+        nbt.setString("ScrollText", this.getScrollText());
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         this.scrollText = nbt.getString("ScrollText");
+        this.dataWatcher.updateObject(30, this.scrollText);
     }
 
     @Override
@@ -66,6 +76,4 @@ public class EntityHangingScroll extends EntityHanging {
         }
         this.entityDropItem(drop, 0.0F);
     }
-
-
 }

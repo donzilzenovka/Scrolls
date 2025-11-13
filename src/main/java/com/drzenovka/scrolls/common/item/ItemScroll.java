@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Facing;
 import net.minecraft.world.World;
 
 public class ItemScroll extends Item {
@@ -72,16 +71,13 @@ public class ItemScroll extends Item {
             default -> 0;
         };
 
-        EntityHangingScroll scrollEntity = new EntityHangingScroll(world, x, y, z, direction);
-
-        // Transfer NBT
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_PAGE)) {
-            scrollEntity.setScrollText(stack.getTagCompound().getString(NBT_PAGE));
-        }
-
-        if (!scrollEntity.onValidSurface()) return false;
-        System.out.println("Is valid");
         if (!world.isRemote) {
+            EntityHangingScroll scrollEntity = new EntityHangingScroll(world, x, y, z, direction);
+            // Transfer NBT
+            if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_PAGE)) {
+                scrollEntity.setScrollText(stack.getTagCompound().getString(NBT_PAGE));
+            }
+            if (!scrollEntity.onValidSurface()) return false;
             world.spawnEntityInWorld(scrollEntity);
             if (!player.capabilities.isCreativeMode) {
                 --stack.stackSize;
