@@ -1,23 +1,42 @@
 package com.drzenovka.scrolls.common.item;
 
 import com.drzenovka.scrolls.common.util.ColorUtils;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.List;
 
+import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
+
 public class ItemScrollColored extends ItemScroll {
 
+    private IIcon[] icons;
+
     public ItemScrollColored() {
-        setHasSubtypes(true);
-        setMaxDamage(0);
-        setCreativeTab(CreativeTabs.tabMisc);
-        setUnlocalizedName("scroll_colored");
+        this.setUnlocalizedName("scroll_colored")
+            .setHasSubtypes(true)
+            .setMaxDamage(0)
+            .setMaxStackSize(1)
+            .setCreativeTab(CreativeTabs.tabMisc);
+
+    }
+
+    @Override
+    public void registerIcons(IIconRegister reg) {
+        icons = new IIcon[COLOR_NAMES.length];
+        for (int i = 0; i < COLOR_NAMES.length; i++) {
+            icons[i] = reg.registerIcon("scrolls:colored_scroll_" + COLOR_NAMES[i]);
+        }
+    }
+
+    @Override
+    public IIcon getIconFromDamage(int meta) {
+        return icons[Math.min(meta, icons.length - 1)];
     }
 
     @Override
@@ -34,16 +53,5 @@ public class ItemScrollColored extends ItemScroll {
             list.add(new ItemStack(item, 1, i));
         }
     }
-    /*
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
-        super.addInformation(stack, player, list, advanced);
-        int meta = stack.getItemDamage();
-        if (meta < 0 || meta >= ColorUtils.COLOR_NAMES.length) meta = 0;
-        String colorName = StatCollector.translateToLocal("tooltip.scroll.colored." + ColorUtils.COLOR_NAMES[meta]);
-        list.add(ColorUtils.COLOR_NAMES[meta] + colorName);
-    }
-    */
 
 }
