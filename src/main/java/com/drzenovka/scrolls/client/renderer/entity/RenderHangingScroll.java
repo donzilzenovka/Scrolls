@@ -77,7 +77,7 @@ public class RenderHangingScroll extends Render {
 
             // Small offsets so text isn’t glued to the edge
             final int LEFT_MARGIN = -32; // tweak this for desired positioning
-            final int TOP_MARGIN = -45;     // vertical offset from top of scroll (tweak as needed)
+            final int TOP_MARGIN = -55;     // vertical offset from top of scroll (tweak as needed)
 
             for (int i = 0; i < wrappedLines.size(); i++) {
                 String line = wrappedLines.get(i);

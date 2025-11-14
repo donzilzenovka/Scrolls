@@ -12,8 +12,8 @@ public class ModItems {
 
     // Public reference for the scroll item
     public static ItemScroll scroll;
-    public static ItemScroll scrollStamped;
     public static ItemScroll scrollColored;
+    public static ItemScroll scrollStamped;
     public static ItemWax wax;
     public static Item paperColored;
 

@@ -28,7 +28,7 @@ public class ItemPaperColored extends Item {
     @Override
     public void registerIcons(IIconRegister reg) {
         icons = new IIcon[COLOR_NAMES.length];
-        for (int i = 0; i < COLOR_NAMES.length; i++) {
+        for (int i = 1; i < COLOR_NAMES.length; i++) {
             icons[i] = reg.registerIcon("scrolls:colored_paper_" + COLOR_NAMES[i]);
         }
     }

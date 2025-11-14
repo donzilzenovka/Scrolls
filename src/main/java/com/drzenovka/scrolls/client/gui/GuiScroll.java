@@ -7,6 +7,7 @@ import com.drzenovka.scrolls.network.PacketSaveScroll;
 import com.drzenovka.scrolls.common.core.Scrolls;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -117,27 +118,29 @@ public class GuiScroll extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
 
-        int guiWidth = 100;
-        int guiHeight = 160;
+        int guiWidth = 128;
+        int guiHeight = 192;
         int x = (width - guiWidth) / 2;
         int y = (height - guiHeight) / 2;
 
         GL11.glColor4f(1f, 1f, 1f, 1f);
-        ResourceLocation BG_TEXTURE;
 
+        ResourceLocation BG_TEXTURE;
         if (stack != null) {
             int meta = stack.getItemDamage();
             if (meta < 0 || meta >= ColorUtils.COLOR_NAMES.length) meta = 0;
-            BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_" + ColorUtils.COLOR_NAMES[meta] + ".png");
+            BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg_" + ColorUtils.COLOR_NAMES[meta] + ".png");
         } else {
-            // fallback to plain white scroll
             BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg.png");
         }
-        mc.getTextureManager().bindTexture(BG_TEXTURE);
-        drawTexturedModalRect(x, y, 0, 0, guiWidth, guiHeight);
 
-        final int LEFT_MARGIN = 16; // tweak this for desired positioning
-        final int TOP_MARGIN = 32;     // vertical offset from top of scroll (tweak as needed)
+        mc.getTextureManager().bindTexture(BG_TEXTURE);
+
+        // FIXED: use custom UV mapping
+        drawCustomSizedTexture(x, y, 0, 0, guiWidth, guiHeight, guiWidth, guiHeight);
+
+        final int LEFT_MARGIN = 32;
+        final int TOP_MARGIN  = 42;
 
         int lineHeight = fontRendererObj.FONT_HEIGHT + 2;
         for (int i = 0; i < MAX_LINES; i++) {
@@ -145,8 +148,8 @@ public class GuiScroll extends GuiScreen {
         }
 
         if ((cursorTick / 6) % 2 == 0 && cursorLine < MAX_LINES) {
-            String textBeforeCursor = lines[cursorLine];
-            int cursorX = x + LEFT_MARGIN + fontRendererObj.getStringWidth(textBeforeCursor);
+            String beforeCursor = lines[cursorLine];
+            int cursorX = x + LEFT_MARGIN + fontRendererObj.getStringWidth(beforeCursor);
             int cursorY = y + TOP_MARGIN + cursorLine * lineHeight;
             fontRendererObj.drawString("_", cursorX, cursorY, 0x000000);
         }
@@ -154,11 +157,12 @@ public class GuiScroll extends GuiScreen {
         if (stack.getItem() instanceof ItemScrollStamped) {
             int meta = stack.getItemDamage();
             mc.getTextureManager().bindTexture(STAMP_TEXTURES[meta]);
-            drawTexturedModalRect(x + 60, y + 120, 0, 0, 16, 16); // bottom-right wax seal
+            drawCustomSizedTexture(x + 60, y + 120, 0, 0, 16, 16, 16, 16);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
+
 
     private void saveText() {
         ItemStack stack = player.inventory.getStackInSlot(handSlot);
@@ -180,5 +184,21 @@ public class GuiScroll extends GuiScreen {
 
         player.inventory.setInventorySlotContents(handSlot, stack);
         Scrolls.NETWORK.sendToServer(new PacketSaveScroll(handSlot, pageText, pageAuthor));
+    }
+
+    public void drawCustomSizedTexture(int x, int y, int u, int v,
+                                       int width, int height,
+                                       int texWidth, int texHeight) {
+
+        float f  = 1F / texWidth;
+        float f1 = 1F / texHeight;
+
+        Tessellator tess = Tessellator.instance;
+        tess.startDrawingQuads();
+        tess.addVertexWithUV(x,         y + height, this.zLevel, (u) * f,          (v + height) * f1);
+        tess.addVertexWithUV(x + width, y + height, this.zLevel, (u + width) * f,  (v + height) * f1);
+        tess.addVertexWithUV(x + width, y,          this.zLevel, (u + width) * f,  (v) * f1);
+        tess.addVertexWithUV(x,         y,          this.zLevel, (u) * f,          (v) * f1);
+        tess.draw();
     }
 }
