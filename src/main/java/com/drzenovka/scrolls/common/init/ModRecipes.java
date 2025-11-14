@@ -11,20 +11,23 @@ public class ModRecipes {
 
         // Crafting recipe: Paper + Feather + Ink Sac
         GameRegistry.addRecipe(new ShapelessOreRecipe(
-            new ItemStack(ModItems.scroll),
+            new ItemStack(ModItems.scrollColored),
             "quill",
             "paper",
             "ink"
         ));
 
+        /*
         //stamped scrolls and wax
         for (int i = 0; i < 16; i++) {
             GameRegistry.addShapelessRecipe(
                 new ItemStack(ModItems.scrollStamped, 1, i),
-                new ItemStack(ModItems.scroll),
+                new ItemStack(ModItems.scrollColored),
                 new ItemStack(ModItems.wax, 1, i)
             );
         }
+
+         */
 
         //colored paper
         for (int i = 0; i < 15; i++) {
@@ -43,6 +46,9 @@ public class ModRecipes {
                 new ItemStack(Items.feather)
             );
         }
+
+        //StampedScrolls
+        GameRegistry.addRecipe(new RecipeStampScroll());
 
     }
 }

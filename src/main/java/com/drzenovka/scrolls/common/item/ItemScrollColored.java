@@ -3,6 +3,7 @@ package com.drzenovka.scrolls.common.item;
 import com.drzenovka.scrolls.common.util.ColorUtils;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -49,8 +50,17 @@ public class ItemScrollColored extends ItemScroll {
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-        for (int i = 1; i < ColorUtils.COLOR_NAMES.length; i++) {
+        for (int i = 0; i < ColorUtils.COLOR_NAMES.length; i++) {
             list.add(new ItemStack(item, 1, i));
+        }
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
+        super.addInformation(stack, player, list, advanced);
+        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("stampColor")) {
+            int c = stack.getTagCompound().getInteger("stampColor");
+            list.add(String.format("Stamp Color: #%06X", c));
         }
     }
 

@@ -70,7 +70,7 @@ public class EntityHangingScroll extends EntityItemFrame {
         if (entity instanceof EntityPlayer && ((EntityPlayer)entity).capabilities.isCreativeMode)
             return;
 
-        ItemStack drop = new ItemStack(ModItems.scroll);
+        ItemStack drop = new ItemStack(ModItems.scrollColored, 1, 0); //TODO change to meta
 
         // Always create NBT, even if scrollText is empty
         if (!drop.hasTagCompound()) drop.setTagCompound(new NBTTagCompound());

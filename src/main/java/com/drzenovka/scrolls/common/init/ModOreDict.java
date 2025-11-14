@@ -23,7 +23,7 @@ public class ModOreDict {
             OreDictionary.registerOre("wax" + capitalize(color), new ItemStack(ModItems.wax, 1, i));
 
             // If you want scroll variants in OreDict too:
-            OreDictionary.registerOre("scrollStamped" + capitalize(color), new ItemStack(ModItems.scrollStamped, 1, i));
+            //OreDictionary.registerOre("scrollStamped" + capitalize(color), new ItemStack(ModItems.scrollStamped, 1, i));
         }
     }
 

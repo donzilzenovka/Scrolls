@@ -67,6 +67,7 @@ item.paper.green.name=Green Paper
 item.paper.red.name=Red Paper
 item.paper.black.name=Black Paper
 
+item.scroll.colored.white.name=White Scroll
 item.scroll.colored.orange.name=Orange Scroll
 item.scroll.colored.magenta.name=Magenta Scroll
 item.scroll.colored.light_blue.name=Light Blue Scroll
@@ -82,4 +83,6 @@ item.scroll.colored.brown.name=Brown Scroll
 item.scroll.colored.green.name=Green Scroll
 item.scroll.colored.red.name=Red Scroll
 item.scroll.colored.black.name=Black Scroll
+
+item.stamp.name=Stamp
 

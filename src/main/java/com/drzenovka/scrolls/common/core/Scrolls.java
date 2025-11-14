@@ -6,6 +6,7 @@ import com.drzenovka.scrolls.common.init.ModEntities;
 import com.drzenovka.scrolls.common.init.ModItems;
 import com.drzenovka.scrolls.common.init.ModOreDict;
 import com.drzenovka.scrolls.common.init.ModRecipes;
+import com.drzenovka.scrolls.common.init.RecipeStampScroll;
 import com.drzenovka.scrolls.network.PacketSaveScroll;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;

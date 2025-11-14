@@ -26,18 +26,10 @@ public class GuiScroll extends GuiScreen {
     private int cursorTick = 0;
 
     public static final int MAX_LINES = 10;
-    //private static final ResourceLocation BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg.png");
+    private static final int LINE_HEIGHT = 12; // approximate, can adjust dynamically
 
-    //int colorMeta = stack.getItemDamage();
-    //private static final ResourceLocation BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg_" + ColorUtils.COLOR_NAMES[colorMeta] + ".png");
-
-    private static final ResourceLocation[] STAMP_TEXTURES = new ResourceLocation[16];
-    static {
-        String[] colorNames = ColorUtils.COLOR_NAMES;
-        for (int i = 0; i < 16; i++) {
-            STAMP_TEXTURES[i] = new ResourceLocation("scrolls", "textures/gui/stamp_" + colorNames[i] + ".png");
-        }
-    }
+    private static final ResourceLocation BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg.png");
+    private static final ResourceLocation STAMP_TEXTURE = new ResourceLocation("scrolls", "textures/gui/stamp_texture.png");
 
     public GuiScroll(EntityPlayer player, int handSlot) {
         this.player = player;
@@ -47,31 +39,38 @@ public class GuiScroll extends GuiScreen {
     }
 
     private void initLinesFromStack() {
-        if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
+        ensureTag();
         lines = new String[MAX_LINES];
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(ItemScroll.NBT_PAGE)) {
-            String saved = stack.getTagCompound().getString(ItemScroll.NBT_PAGE);
-            if (saved != null && !saved.isEmpty()) {
-                String[] split = saved.split("\n", MAX_LINES);
-                for (int i = 0; i < split.length && i < MAX_LINES; i++) {
-                    lines[i] = split[i] != null ? split[i] : "";
-                }
+
+        String saved = getTag().getString(ItemScroll.NBT_PAGE);
+        if (saved != null && !saved.isEmpty()) {
+            String[] split = saved.split("\n", MAX_LINES);
+            for (int i = 0; i < split.length && i < MAX_LINES; i++) {
+                lines[i] = split[i] != null ? split[i] : "";
             }
         }
-// Fill any remaining lines with empty strings
+
+        // Fill remaining lines with empty string
         for (int i = 0; i < MAX_LINES; i++) {
             if (lines[i] == null) lines[i] = "";
         }
+    }
+
+    private void ensureTag() {
+        if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
+    }
+
+    private NBTTagCompound getTag() {
+        ensureTag();
+        return stack.getTagCompound();
     }
 
     @Override
     public void initGui() {
         super.initGui();
         buttonList.clear();
-
         int x = (width - 100) / 2;
         int y = (height - 160) / 2;
-
         buttonList.add(new GuiButton(0, x + 75, y + 145, 30, 20, "Save"));
         Keyboard.enableRepeatEvents(true);
     }
@@ -98,19 +97,19 @@ public class GuiScroll extends GuiScreen {
     protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == Keyboard.KEY_ESCAPE) {
             mc.displayGuiScreen(null);
-            return;
-        }
-
-        if (keyCode == Keyboard.KEY_BACK && lines[cursorLine].length() > 0) {
+        } else if (keyCode == Keyboard.KEY_BACK && lines[cursorLine].length() > 0) {
             lines[cursorLine] = lines[cursorLine].substring(0, lines[cursorLine].length() - 1);
         } else if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
             if (cursorLine < MAX_LINES - 1) cursorLine++;
         } else if (typedChar >= 32 && typedChar <= 126) {
-            String test = lines[cursorLine] + typedChar;
-            int width = fontRendererObj.getStringWidth(test);
-            if (width <= ScrollTextFormatter.MAX_LINE_WIDTH) {
-                lines[cursorLine] = test;
-            }
+            appendCharToLine(typedChar);
+        }
+    }
+
+    private void appendCharToLine(char c) {
+        String next = lines[cursorLine] + c;
+        if (fontRendererObj.getStringWidth(next) <= ScrollTextFormatter.MAX_LINE_WIDTH) {
+            lines[cursorLine] = next;
         }
     }
 
@@ -118,55 +117,73 @@ public class GuiScroll extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
 
-        int guiWidth = 128;
-        int guiHeight = 192;
+        mc.getTextureManager().bindTexture(BG_TEXTURE);
+
+        int guiWidth = 128, guiHeight = 192;
         int x = (width - guiWidth) / 2;
         int y = (height - guiHeight) / 2;
 
-        GL11.glColor4f(1f, 1f, 1f, 1f);
+        int meta = stack != null ? stack.getItemDamage() : 0;
+        if (meta < 0 || meta >= ColorUtils.GL11_COLOR_VALUES.length) meta = 0;
 
-        ResourceLocation BG_TEXTURE;
-        if (stack != null) {
-            int meta = stack.getItemDamage();
-            if (meta < 0 || meta >= ColorUtils.COLOR_NAMES.length) meta = 0;
-            BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg_" + ColorUtils.COLOR_NAMES[meta] + ".png");
-        } else {
-            BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg.png");
-        }
+        float[] color = ColorUtils.GL11_COLOR_VALUES[meta];
+        GL11.glColor4f(color[0], color[1], color[2], 1f);
 
-        mc.getTextureManager().bindTexture(BG_TEXTURE);
-
-        // FIXED: use custom UV mapping
         drawCustomSizedTexture(x, y, 0, 0, guiWidth, guiHeight, guiWidth, guiHeight);
 
-        final int LEFT_MARGIN = 32;
-        final int TOP_MARGIN  = 42;
+        GL11.glColor4f(1f, 1f, 1f, 1f);
 
-        int lineHeight = fontRendererObj.FONT_HEIGHT + 2;
-        for (int i = 0; i < MAX_LINES; i++) {
-            fontRendererObj.drawString(lines[i], x + LEFT_MARGIN, y + TOP_MARGIN + i * lineHeight, 0x000000);
-        }
-
-        if ((cursorTick / 6) % 2 == 0 && cursorLine < MAX_LINES) {
-            String beforeCursor = lines[cursorLine];
-            int cursorX = x + LEFT_MARGIN + fontRendererObj.getStringWidth(beforeCursor);
-            int cursorY = y + TOP_MARGIN + cursorLine * lineHeight;
-            fontRendererObj.drawString("_", cursorX, cursorY, 0x000000);
-        }
-
-        if (stack.getItem() instanceof ItemScrollStamped) {
-            int meta = stack.getItemDamage();
-            mc.getTextureManager().bindTexture(STAMP_TEXTURES[meta]);
-            drawCustomSizedTexture(x + 60, y + 120, 0, 0, 16, 16, 16, 16);
-        }
+        drawTextLines(x, y);
+        drawCursor(x, y);
+        drawStamp(x, y);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
+    private void drawTextLines(int x, int y) {
+        final int LEFT_MARGIN = 32, TOP_MARGIN = 42;
+        for (int i = 0; i < MAX_LINES; i++) {
+            fontRendererObj.drawString(lines[i], x + LEFT_MARGIN, y + TOP_MARGIN + i * LINE_HEIGHT, 0x000000);
+        }
+    }
+
+    private void drawCursor(int x, int y) {
+        if ((cursorTick / 6) % 2 != 0 || cursorLine >= MAX_LINES) return;
+        final int LEFT_MARGIN = 32, TOP_MARGIN = 42;
+        String beforeCursor = lines[cursorLine];
+        int cursorX = x + LEFT_MARGIN + fontRendererObj.getStringWidth(beforeCursor);
+        int cursorY = y + TOP_MARGIN + cursorLine * LINE_HEIGHT;
+        fontRendererObj.drawString("_", cursorX, cursorY, 0x000000);
+    }
+
+    private void drawStamp(int x, int y) {
+        if (!(stack.getItem() instanceof ItemScrollStamped)) return;
+
+        NBTTagCompound tag = stack.getTagCompound();
+        if (tag == null) return;
+
+        int count = tag.getInteger("stampCount");
+        if (count == 0) return;
+
+        mc.getTextureManager().bindTexture(STAMP_TEXTURE);
+
+        for (int i = 0; i < count; i++) {
+            int color = tag.getInteger("stampColor" + i);
+
+            // Convert from 0xRRGGBB to GL floats
+            float r = ((color >> 16) & 0xFF) / 255f;
+            float g = ((color >> 8)  & 0xFF) / 255f;
+            float b = (color & 0xFF) / 255f;
+
+            GL11.glColor4f(r, g, b, 1f);
+            drawCustomSizedTexture(x + 30 + i * 10, y + 150, 0, 0, 16, 16, 16, 16);
+        }
+
+        GL11.glColor4f(1,1,1,1);
+    }
 
     private void saveText() {
-        ItemStack stack = player.inventory.getStackInSlot(handSlot);
-        if (stack == null || !(stack.getItem() instanceof ItemScroll)) return;
+        if (!(stack.getItem() instanceof ItemScroll)) return;
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < MAX_LINES; i++) {
@@ -176,11 +193,9 @@ public class GuiScroll extends GuiScreen {
         String pageText = sb.toString();
         String pageAuthor = player.getDisplayName();
 
-        if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
-        NBTTagCompound tag = stack.getTagCompound();
-
+        NBTTagCompound tag = getTag();
         tag.setString(ItemScroll.NBT_PAGE, pageText);
-        tag.setString(ItemScroll.NBT_AUTHOR, pageAuthor);  // track last editor
+        tag.setString(ItemScroll.NBT_AUTHOR, pageAuthor);
 
         player.inventory.setInventorySlotContents(handSlot, stack);
         Scrolls.NETWORK.sendToServer(new PacketSaveScroll(handSlot, pageText, pageAuthor));
