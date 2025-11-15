@@ -1,6 +1,7 @@
 package com.drzenovka.scrolls.common.init;
 
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -67,7 +68,9 @@ public class RecipeStampScroll implements IRecipe {
         // copy original scroll
         ItemStack output = scroll.copy();
 
-        int color = ItemDye.field_150922_c[dyeMeta]; // vanilla dye RGB
+        //int color = ItemDye.field_150922_c[dyeMeta]; // vanilla dye RGB
+        System.out.println(dyeMeta);
+        int color = 15 - dyeMeta;
 
         // read or create NBT
         NBTTagCompound tag = output.getTagCompound();

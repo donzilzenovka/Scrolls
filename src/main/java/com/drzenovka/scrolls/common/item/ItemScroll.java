@@ -3,6 +3,7 @@ package com.drzenovka.scrolls.common.item;
 import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
 import com.drzenovka.scrolls.client.gui.GuiScroll;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,8 @@ public class ItemScroll extends Item {
 
     public static final String NBT_PAGE = "page";
     public static final String NBT_AUTHOR = "author";
+    public static final String STAMP_COLOR = "stampColor";
+    public static final String STAMP_COUNT = "stampCount";
 
 
     public ItemScroll() {
@@ -27,8 +30,17 @@ public class ItemScroll extends Item {
     /** Initialize NBT for a new scroll */
     private void initNBT(ItemStack stack) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setString(NBT_PAGE, "");
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setString(NBT_PAGE, "");
+            tag.setString(NBT_AUTHOR, "");
+            tag.setInteger(STAMP_COUNT, 0);
+
+            // Initialize all three stamp colors to -1
+            for (int i = 0; i < 3; i++) {
+                tag.setInteger(STAMP_COLOR + i, -1);
+            }
+
+            stack.setTagCompound(tag);
         }
     }
 
@@ -98,11 +110,17 @@ public class ItemScroll extends Item {
     }
 
     @Override
+    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isSelected) {
+        initNBT(stack);
+    }
+
+    @Override
     public void addInformation(ItemStack stack, EntityPlayer player, java.util.List list, boolean advanced) {
-        if (!stack.hasTagCompound()) {
-            list.add("Blank");
-            return;
-        }
+        initNBT(stack);
+        //if (!stack.hasTagCompound()) {
+        //    list.add("Blank");
+        //    return;
+        //}
         NBTTagCompound tag = stack.getTagCompound();
         String editor = tag.getString(NBT_AUTHOR);
 

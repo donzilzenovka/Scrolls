@@ -6,9 +6,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
@@ -58,10 +61,35 @@ public class ItemScrollColored extends ItemScroll {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
         super.addInformation(stack, player, list, advanced);
+
+        if (stack == null || !stack.hasTagCompound()) return;
+        NBTTagCompound tag = stack.getTagCompound();
+
+        int count = tag.getInteger(ItemScroll.STAMP_COUNT);
+        for (int i = 0; i < count; i++) {
+            int colorIndex = tag.getInteger(ItemScroll.STAMP_COLOR + i);
+
+            String stampColor = ColorUtils.COLOR_NAMES[colorIndex];
+            EnumChatFormatting color = ColorUtils.COLOR_ENUMS[colorIndex];
+            String tooltipKey = "tooltip.scroll.stamp." + stampColor; // assumes keys like tooltip.scroll.stamp.0
+            list.add(color + StatCollector.translateToLocal(tooltipKey));
+        }
+        /*
+        int meta = stack.getItemDamage();
+        // Get localized stamp text
+        String baseText = StatCollector.translateToLocal("tooltip.scroll.stamp." + COLOR_NAMES[meta]);
+
+
+        EnumChatFormatting color = ColorUtils.COLOR_ENUMS[meta % ColorUtils.COLOR_ENUMS.length];
+        list.add(color + baseText);
+
+
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey("stampColor")) {
             int c = stack.getTagCompound().getInteger("stampColor");
             list.add(String.format("Stamp Color: #%06X", c));
         }
+
+         */
     }
 
 }

@@ -1,6 +1,7 @@
 package com.drzenovka.scrolls.client.gui;
 
 import com.drzenovka.scrolls.common.item.ItemScroll;
+import com.drzenovka.scrolls.common.item.ItemScrollColored;
 import com.drzenovka.scrolls.common.item.ItemScrollStamped;
 import com.drzenovka.scrolls.common.util.ColorUtils;
 import com.drzenovka.scrolls.network.PacketSaveScroll;
@@ -71,7 +72,10 @@ public class GuiScroll extends GuiScreen {
         buttonList.clear();
         int x = (width - 100) / 2;
         int y = (height - 160) / 2;
-        buttonList.add(new GuiButton(0, x + 75, y + 145, 30, 20, "Save"));
+
+        if (!checkStamped(stack)) {
+            buttonList.add(new GuiButton(0, x + 75, y + 145, 30, 20, "Save"));
+        }
         Keyboard.enableRepeatEvents(true);
     }
 
@@ -97,12 +101,15 @@ public class GuiScroll extends GuiScreen {
     protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == Keyboard.KEY_ESCAPE) {
             mc.displayGuiScreen(null);
-        } else if (keyCode == Keyboard.KEY_BACK && lines[cursorLine].length() > 0) {
-            lines[cursorLine] = lines[cursorLine].substring(0, lines[cursorLine].length() - 1);
-        } else if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
-            if (cursorLine < MAX_LINES - 1) cursorLine++;
-        } else if (typedChar >= 32 && typedChar <= 126) {
-            appendCharToLine(typedChar);
+        }
+        if(!checkStamped(stack)) {
+            if (keyCode == Keyboard.KEY_BACK && lines[cursorLine].length() > 0) {
+                lines[cursorLine] = lines[cursorLine].substring(0, lines[cursorLine].length() - 1);
+            } else if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
+                if (cursorLine < MAX_LINES - 1) cursorLine++;
+            } else if (typedChar >= 32 && typedChar <= 126) {
+                appendCharToLine(typedChar);
+            }
         }
     }
 
@@ -134,7 +141,10 @@ public class GuiScroll extends GuiScreen {
         GL11.glColor4f(1f, 1f, 1f, 1f);
 
         drawTextLines(x, y);
-        drawCursor(x, y);
+        assert stack != null;
+        if(!checkStamped(stack)) {
+            drawCursor(x, y);
+        }
         drawStamp(x, y);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -157,7 +167,7 @@ public class GuiScroll extends GuiScreen {
     }
 
     private void drawStamp(int x, int y) {
-        if (!(stack.getItem() instanceof ItemScrollStamped)) return;
+        if (!(stack.getItem() instanceof ItemScrollColored)) return;
 
         NBTTagCompound tag = stack.getTagCompound();
         if (tag == null) return;
@@ -171,12 +181,26 @@ public class GuiScroll extends GuiScreen {
             int color = tag.getInteger("stampColor" + i);
 
             // Convert from 0xRRGGBB to GL floats
-            float r = ((color >> 16) & 0xFF) / 255f;
-            float g = ((color >> 8)  & 0xFF) / 255f;
-            float b = (color & 0xFF) / 255f;
+            //float r = ((color >> 16) & 0xFF) / 255f;
+            //float g = ((color >> 8)  & 0xFF) / 255f;
+            //float b = (color & 0xFF) / 255f;
 
-            GL11.glColor4f(r, g, b, 1f);
-            drawCustomSizedTexture(x + 30 + i * 10, y + 150, 0, 0, 16, 16, 16, 16);
+            int dyeMeta = tag.getInteger("stampColor" + i);  // THIS is the lookup index
+            if (dyeMeta < 0 || dyeMeta >= ColorUtils.GL11_COLOR_VALUES.length) {
+                dyeMeta = 0; // safety fallback
+            }
+
+            float r = ColorUtils.GL11_COLOR_VALUES[dyeMeta][0];
+            float g = ColorUtils.GL11_COLOR_VALUES[dyeMeta][1];
+            float b = ColorUtils.GL11_COLOR_VALUES[dyeMeta][2];
+
+            //float r = ColorUtils.GL11_COLOR_VALUES[i][0];
+            //float g = ColorUtils.GL11_COLOR_VALUES[i][1];
+            //float b = ColorUtils.GL11_COLOR_VALUES[i][2];
+            //System.out.println("color: " + color);
+            //System.out.print("r:" + r + " g:" + g + " b:" + b + "\\n");
+            GL11.glColor4f(r,g,b,1f);
+            drawCustomSizedTexture(x + 30 + i * 4 + i, y + 150 + i - i ^ i , 0, 0, 16, 16, 16, 16);
         }
 
         GL11.glColor4f(1,1,1,1);
@@ -215,5 +239,10 @@ public class GuiScroll extends GuiScreen {
         tess.addVertexWithUV(x + width, y,          this.zLevel, (u + width) * f,  (v) * f1);
         tess.addVertexWithUV(x,         y,          this.zLevel, (u) * f,          (v) * f1);
         tess.draw();
+    }
+
+    public boolean checkStamped(ItemStack stack) {
+        NBTTagCompound tag = stack.getTagCompound();
+        return (tag.getInteger(ItemScroll.STAMP_COUNT) == 3);
     }
 }
