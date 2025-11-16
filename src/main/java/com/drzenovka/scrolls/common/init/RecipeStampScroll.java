@@ -1,13 +1,13 @@
 package com.drzenovka.scrolls.common.init;
 
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraft.world.World;
+
+import static com.drzenovka.scrolls.common.util.Utils.isOreDictItem;
 
 public class RecipeStampScroll implements IRecipe {
 
@@ -27,18 +27,14 @@ public class RecipeStampScroll implements IRecipe {
 
                 // Prevent adding stamps if already 3
                 NBTTagCompound tag = stack.getTagCompound();
-                if (tag != null && tag.getInteger("stampCount") >= 3)
-                    return false;
-            }
-            else if (stack.getItem() == ModItems.stamp) {
+                if (tag != null && tag.getInteger("stampCount") >= 3) return false;
+            } else if (stack.getItem() == ModItems.stamp) {
                 if (foundStamp) return false;
                 foundStamp = true;
-            }
-            else if (stack.getItem() instanceof ItemDye) {
+            } else if (isOreDictItem(stack, "ink")) {
                 if (foundDye) return false;
                 foundDye = true;
-            }
-            else {
+            } else {
                 return false; // any other item invalidates recipe
             }
         }
@@ -58,7 +54,7 @@ public class RecipeStampScroll implements IRecipe {
 
             if (stack.getItem() == ModItems.scrollColored) {
                 scroll = stack;
-            } else if (stack.getItem() instanceof ItemDye) {
+            } else if (isOreDictItem(stack, "ink")) {
                 dyeMeta = stack.getItemDamage();
             }
         }
@@ -68,7 +64,6 @@ public class RecipeStampScroll implements IRecipe {
         // copy original scroll
         ItemStack output = scroll.copy();
 
-        //int color = ItemDye.field_150922_c[dyeMeta]; // vanilla dye RGB
         System.out.println(dyeMeta);
         int color = 15 - dyeMeta;
 

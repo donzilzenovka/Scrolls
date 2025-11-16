@@ -1,24 +1,25 @@
 package com.drzenovka.scrolls.client.renderer.entity;
 
-import com.drzenovka.scrolls.client.gui.ScrollTextFormatter;
-import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
-import com.drzenovka.scrolls.common.item.ItemScroll;
-import com.drzenovka.scrolls.common.util.ColorUtils;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.drzenovka.scrolls.client.gui.ScrollTextFormatter;
+import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
+import com.drzenovka.scrolls.common.util.ColorUtils;
 
 public class RenderHangingScroll extends Render {
 
-    private static final ResourceLocation SCROLL_TEXTURE =
-        new ResourceLocation("scrolls", "textures/entity/hanging_scroll.png");
+    private static final ResourceLocation SCROLL_TEXTURE = new ResourceLocation(
+        "scrolls",
+        "textures/entity/hanging_scroll.png");
     private static final int LINE_SPACING = 10; // pixels between lines at render scale
 
     public RenderHangingScroll() {
@@ -31,8 +32,7 @@ public class RenderHangingScroll extends Render {
     }
 
     @Override
-    public void doRender(Entity entity, double x, double y, double z,
-                         float yaw, float partialTicks) {
+    public void doRender(Entity entity, double x, double y, double z, float yaw, float partialTicks) {
         if (!(entity instanceof EntityHangingScroll scroll)) return;
 
         // Load scroll data
@@ -64,10 +64,14 @@ public class RenderHangingScroll extends Render {
 
         GL11.glColor4f(color[0], color[1], color[2], 1f);
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0F, 0F); GL11.glVertex3f(-0.5F, 0.5F, 0F);
-        GL11.glTexCoord2f(1F, 0F); GL11.glVertex3f(0.5F, 0.5F, 0F);
-        GL11.glTexCoord2f(1F, 1F); GL11.glVertex3f(0.5F, -0.5F, 0F);
-        GL11.glTexCoord2f(0F, 1F); GL11.glVertex3f(-0.5F, -0.5F, 0F);
+        GL11.glTexCoord2f(0F, 0F);
+        GL11.glVertex3f(-0.5F, 0.5F, 0F);
+        GL11.glTexCoord2f(1F, 0F);
+        GL11.glVertex3f(0.5F, 0.5F, 0F);
+        GL11.glTexCoord2f(1F, 1F);
+        GL11.glVertex3f(0.5F, -0.5F, 0F);
+        GL11.glTexCoord2f(0F, 1F);
+        GL11.glVertex3f(-0.5F, -0.5F, 0F);
         GL11.glEnd();
         GL11.glColor4f(1f, 1f, 1f, 1f);
     }
@@ -89,7 +93,8 @@ public class RenderHangingScroll extends Render {
         final int LEFT_MARGIN = -32;
         final int TOP_MARGIN = -55;
 
-        int color = ColorUtils.rgbToHex( ColorUtils.GL11_COLOR_VALUES[inkColor][0],
+        int color = ColorUtils.rgbToHex(
+            ColorUtils.GL11_COLOR_VALUES[inkColor][0],
             ColorUtils.GL11_COLOR_VALUES[inkColor][1],
             ColorUtils.GL11_COLOR_VALUES[inkColor][2]);
 
@@ -104,9 +109,9 @@ public class RenderHangingScroll extends Render {
     private void drawStamps(int count, int[] colors) {
         if (count <= 0 || colors == null) return;
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(
-            new ResourceLocation("scrolls", "textures/gui/stamp_texture.png")
-        );
+        Minecraft.getMinecraft()
+            .getTextureManager()
+            .bindTexture(new ResourceLocation("scrolls", "textures/gui/stamp_texture.png"));
 
         GL11.glPushMatrix();
         GL11.glTranslatef(0f, 0f, -0.002f); // slightly in front of text
@@ -122,15 +127,18 @@ public class RenderHangingScroll extends Render {
 
             GL11.glPushMatrix();
             // smaller offsets, proportional to scale
-            //GL11.glScalef(1f, 1f, 1f);
+            // GL11.glScalef(1f, 1f, 1f);
             GL11.glTranslatef(-3F + i * 0.9F, 5.5F, -0.01F + i * 0.01f);
 
-
             GL11.glBegin(GL11.GL_QUADS);
-            GL11.glTexCoord2f(0, 0); GL11.glVertex3f(-1, 1, 0);
-            GL11.glTexCoord2f(1, 0); GL11.glVertex3f(1, 1, 0);
-            GL11.glTexCoord2f(1, 1); GL11.glVertex3f(1, -1, 0);
-            GL11.glTexCoord2f(0, 1); GL11.glVertex3f(-1, -1, 0);
+            GL11.glTexCoord2f(0, 0);
+            GL11.glVertex3f(-1, 1, 0);
+            GL11.glTexCoord2f(1, 0);
+            GL11.glVertex3f(1, 1, 0);
+            GL11.glTexCoord2f(1, 1);
+            GL11.glVertex3f(1, -1, 0);
+            GL11.glTexCoord2f(0, 1);
+            GL11.glVertex3f(-1, -1, 0);
             GL11.glEnd();
 
             GL11.glPopMatrix();

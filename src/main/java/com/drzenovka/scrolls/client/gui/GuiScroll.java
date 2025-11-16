@@ -1,10 +1,5 @@
 package com.drzenovka.scrolls.client.gui;
 
-import com.drzenovka.scrolls.common.item.ItemScroll;
-import com.drzenovka.scrolls.common.item.ItemScrollColored;
-import com.drzenovka.scrolls.common.util.ColorUtils;
-import com.drzenovka.scrolls.network.PacketSaveScroll;
-import com.drzenovka.scrolls.common.core.Scrolls;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,8 +7,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+
+import com.drzenovka.scrolls.common.core.Scrolls;
+import com.drzenovka.scrolls.common.item.ItemScroll;
+import com.drzenovka.scrolls.common.item.ItemScrollColored;
+import com.drzenovka.scrolls.common.util.ColorUtils;
+import com.drzenovka.scrolls.network.PacketSaveScroll;
 
 public class GuiScroll extends GuiScreen {
 
@@ -29,7 +31,9 @@ public class GuiScroll extends GuiScreen {
     private static final int LINE_HEIGHT = 12; // approximate, can adjust dynamically
 
     private static final ResourceLocation BG_TEXTURE = new ResourceLocation("scrolls", "textures/gui/scroll_bg.png");
-    private static final ResourceLocation STAMP_TEXTURE = new ResourceLocation("scrolls", "textures/gui/stamp_texture.png");
+    private static final ResourceLocation STAMP_TEXTURE = new ResourceLocation(
+        "scrolls",
+        "textures/gui/stamp_texture.png");
 
     public GuiScroll(EntityPlayer player, int handSlot) {
         this.player = player;
@@ -101,7 +105,7 @@ public class GuiScroll extends GuiScreen {
         if (keyCode == Keyboard.KEY_ESCAPE) {
             mc.displayGuiScreen(null);
         }
-        if(!checkStamped(stack)) {
+        if (!checkStamped(stack)) {
             if (keyCode == Keyboard.KEY_BACK && lines[cursorLine].length() > 0) {
                 lines[cursorLine] = lines[cursorLine].substring(0, lines[cursorLine].length() - 1);
             } else if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
@@ -123,7 +127,8 @@ public class GuiScroll extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
 
-        mc.getTextureManager().bindTexture(BG_TEXTURE);
+        mc.getTextureManager()
+            .bindTexture(BG_TEXTURE);
 
         int guiWidth = 128, guiHeight = 192;
         int x = (width - guiWidth) / 2;
@@ -134,7 +139,6 @@ public class GuiScroll extends GuiScreen {
 
         int meta = tag.getInteger(ItemScroll.PAPER_COLOR);
 
-
         float[] color = ColorUtils.GL11_COLOR_VALUES[meta];
         GL11.glColor4f(color[0], color[1], color[2], 1f);
 
@@ -144,7 +148,7 @@ public class GuiScroll extends GuiScreen {
 
         drawTextLines(x, y);
         assert stack != null;
-        if(!checkStamped(stack)) {
+        if (!checkStamped(stack)) {
             drawCursor(x, y);
         }
         drawStamp(x, y);
@@ -154,9 +158,10 @@ public class GuiScroll extends GuiScreen {
 
     private void drawTextLines(int x, int y) {
         NBTTagCompound tag = stack.getTagCompound();
-        int inkColor = ColorUtils.rgbToHex( ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][0],
-                                            ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][1],
-                                            ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][2]);
+        int inkColor = ColorUtils.rgbToHex(
+            ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][0],
+            ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][1],
+            ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][2]);
         final int LEFT_MARGIN = 32, TOP_MARGIN = 32;
         for (int i = 0; i < MAX_LINES; i++) {
             fontRendererObj.drawString(lines[i], x + LEFT_MARGIN, y + TOP_MARGIN + i * LINE_HEIGHT, inkColor);
@@ -170,7 +175,8 @@ public class GuiScroll extends GuiScreen {
         int cursorX = x + LEFT_MARGIN + fontRendererObj.getStringWidth(beforeCursor);
         int cursorY = y + TOP_MARGIN + cursorLine * LINE_HEIGHT;
         NBTTagCompound tag = stack.getTagCompound();
-        int inkColor = ColorUtils.rgbToHex( ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][0],
+        int inkColor = ColorUtils.rgbToHex(
+            ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][0],
             ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][1],
             ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][2]);
         fontRendererObj.drawString("_", cursorX, cursorY, inkColor);
@@ -185,12 +191,13 @@ public class GuiScroll extends GuiScreen {
         int count = tag.getInteger("stampCount");
         if (count == 0) return;
 
-        mc.getTextureManager().bindTexture(STAMP_TEXTURE);
+        mc.getTextureManager()
+            .bindTexture(STAMP_TEXTURE);
 
         for (int i = 0; i < count; i++) {
             int color = tag.getInteger("stampColor" + i);
 
-            int dyeMeta = tag.getInteger("stampColor" + i);  // THIS is the lookup index
+            int dyeMeta = tag.getInteger("stampColor" + i); // THIS is the lookup index
             if (dyeMeta < 0 || dyeMeta >= ColorUtils.GL11_COLOR_VALUES.length) {
                 dyeMeta = 0; // safety fallback
             }
@@ -199,11 +206,11 @@ public class GuiScroll extends GuiScreen {
             float g = ColorUtils.GL11_COLOR_VALUES[dyeMeta][1];
             float b = ColorUtils.GL11_COLOR_VALUES[dyeMeta][2];
 
-            GL11.glColor4f(r,g,b,1f);
-            drawCustomSizedTexture(x + 30 + i * 7, y + 150 , 0, 0, 16, 16, 16, 16);
+            GL11.glColor4f(r, g, b, 1f);
+            drawCustomSizedTexture(x + 30 + i * 7, y + 150, 0, 0, 16, 16, 16, 16);
         }
 
-        GL11.glColor4f(1,1,1,1);
+        GL11.glColor4f(1, 1, 1, 1);
     }
 
     private void saveText() {
@@ -225,19 +232,17 @@ public class GuiScroll extends GuiScreen {
         Scrolls.NETWORK.sendToServer(new PacketSaveScroll(handSlot, pageText, pageAuthor));
     }
 
-    public void drawCustomSizedTexture(int x, int y, int u, int v,
-                                       int width, int height,
-                                       int texWidth, int texHeight) {
+    public void drawCustomSizedTexture(int x, int y, int u, int v, int width, int height, int texWidth, int texHeight) {
 
-        float f  = 1F / texWidth;
+        float f = 1F / texWidth;
         float f1 = 1F / texHeight;
 
         Tessellator tess = Tessellator.instance;
         tess.startDrawingQuads();
-        tess.addVertexWithUV(x,         y + height, this.zLevel, (u) * f,          (v + height) * f1);
-        tess.addVertexWithUV(x + width, y + height, this.zLevel, (u + width) * f,  (v + height) * f1);
-        tess.addVertexWithUV(x + width, y,          this.zLevel, (u + width) * f,  (v) * f1);
-        tess.addVertexWithUV(x,         y,          this.zLevel, (u) * f,          (v) * f1);
+        tess.addVertexWithUV(x, y + height, this.zLevel, (u) * f, (v + height) * f1);
+        tess.addVertexWithUV(x + width, y + height, this.zLevel, (u + width) * f, (v + height) * f1);
+        tess.addVertexWithUV(x + width, y, this.zLevel, (u + width) * f, (v) * f1);
+        tess.addVertexWithUV(x, y, this.zLevel, (u) * f, (v) * f1);
         tess.draw();
     }
 

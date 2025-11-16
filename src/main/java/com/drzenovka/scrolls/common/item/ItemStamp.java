@@ -5,7 +5,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class ItemStamp extends Item {
-    public ItemStamp(){
+
+    public ItemStamp() {
         this.setUnlocalizedName("stamp")
             .setTextureName("scrolls:stamp")
             .setMaxStackSize(1)
@@ -14,12 +15,12 @@ public class ItemStamp extends Item {
     }
 
     @Override
-    public boolean hasContainerItem(ItemStack stack){
+    public boolean hasContainerItem(ItemStack stack) {
         return true;
     }
 
     @Override
-    public ItemStack getContainerItem(ItemStack itemStack){
+    public ItemStack getContainerItem(ItemStack itemStack) {
         return itemStack.copy();
     }
 

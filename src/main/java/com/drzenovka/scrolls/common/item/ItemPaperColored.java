@@ -1,17 +1,19 @@
 package com.drzenovka.scrolls.common.item;
 
-import com.drzenovka.scrolls.common.util.ColorUtils;
+import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
+
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.IIcon;
 
-import java.util.List;
+import com.drzenovka.scrolls.common.util.ColorUtils;
 
-import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemPaperColored extends Item {
 

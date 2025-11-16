@@ -3,6 +3,7 @@ package com.drzenovka.scrolls.client.core;
 import com.drzenovka.scrolls.client.renderer.entity.RenderHangingScroll;
 import com.drzenovka.scrolls.common.core.CommonProxy;
 import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
+
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -11,6 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
+
     @Override
     public void init() {
         super.init();
@@ -21,7 +23,5 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityHangingScroll.class, new RenderHangingScroll());
     }
 
-    public static final SimpleNetworkWrapper NETWORK =
-        NetworkRegistry.INSTANCE.newSimpleChannel("scrolls");
-    }
-
+    public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel("scrolls");
+}

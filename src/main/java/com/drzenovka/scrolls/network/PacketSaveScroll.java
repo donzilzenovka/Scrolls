@@ -1,14 +1,19 @@
 package com.drzenovka.scrolls.network;
 
-import com.drzenovka.scrolls.common.item.ItemScroll;
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.drzenovka.scrolls.common.item.ItemScroll;
+
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
+
 public class PacketSaveScroll implements IMessage {
+
     private int slot;
     private String text;
     private String author;
@@ -37,6 +42,7 @@ public class PacketSaveScroll implements IMessage {
     }
 
     public static class Handler implements IMessageHandler<PacketSaveScroll, IMessage> {
+
         @Override
         public IMessage onMessage(PacketSaveScroll message, MessageContext ctx) {
             // Directly update the server-side ItemStack

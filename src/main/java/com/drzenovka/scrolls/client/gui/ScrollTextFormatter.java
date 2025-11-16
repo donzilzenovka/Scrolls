@@ -1,9 +1,9 @@
 package com.drzenovka.scrolls.client.gui;
 
-import net.minecraft.client.gui.FontRenderer;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.client.gui.FontRenderer;
 
 public class ScrollTextFormatter {
 

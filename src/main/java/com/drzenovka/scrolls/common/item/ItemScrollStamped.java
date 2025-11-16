@@ -1,20 +1,22 @@
 package com.drzenovka.scrolls.common.item;
 
-import com.drzenovka.scrolls.common.util.ColorUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
+
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
-import java.util.List;
+import com.drzenovka.scrolls.common.util.ColorUtils;
 
-import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemScrollStamped extends ItemScroll {
 
@@ -53,7 +55,6 @@ public class ItemScrollStamped extends ItemScroll {
         int meta = stack.getItemDamage();
         // Get localized stamp text
         String baseText = StatCollector.translateToLocal("tooltip.scroll.stamp." + COLOR_NAMES[meta]);
-
 
         EnumChatFormatting color = ColorUtils.COLOR_ENUMS[meta % ColorUtils.COLOR_ENUMS.length];
         list.add(color + baseText);

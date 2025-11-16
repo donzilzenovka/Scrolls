@@ -1,12 +1,14 @@
 package com.drzenovka.scrolls.common.init;
 
+import net.minecraft.item.Item;
+
 import com.drzenovka.scrolls.common.item.ItemPaperColored;
 import com.drzenovka.scrolls.common.item.ItemScroll;
 import com.drzenovka.scrolls.common.item.ItemScrollColored;
 import com.drzenovka.scrolls.common.item.ItemStamp;
 import com.drzenovka.scrolls.common.item.ItemWax;
+
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.item.Item;
 
 public class ModItems {
 
@@ -14,7 +16,6 @@ public class ModItems {
     public static ItemWax wax;
     public static Item paperColored;
     public static Item stamp;
-
 
     public static void init() {
         scrollColored = new ItemScrollColored();

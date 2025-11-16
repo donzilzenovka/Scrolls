@@ -1,13 +1,14 @@
 package com.drzenovka.scrolls.client.gui;
 
-import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
-import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class ScrollGuiHandler implements IGuiHandler {
+import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
 
+import cpw.mods.fml.common.network.IGuiHandler;
+
+public class ScrollGuiHandler implements IGuiHandler {
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -22,7 +23,7 @@ public class ScrollGuiHandler implements IGuiHandler {
                 Entity e = world.getEntityByID(x);
                 if (e instanceof EntityHangingScroll) {
                     EntityHangingScroll scroll = (EntityHangingScroll) e;
-                    //return new GuiScroll(player, scroll.getScrollStack()); // pass the scroll's ItemStack
+                    // return new GuiScroll(player, scroll.getScrollStack()); // pass the scroll's ItemStack
                 }
             }
 
@@ -32,6 +33,5 @@ public class ScrollGuiHandler implements IGuiHandler {
         }
         return null;
     }
-
 
 }

@@ -1,6 +1,7 @@
 package com.drzenovka.scrolls.common.init;
 
-import com.drzenovka.scrolls.common.item.ItemScroll;
+import com.drzenovka.scrolls.common.util.DyeColorMap;
+import com.drzenovka.scrolls.common.util.Utils;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemDye;
@@ -8,6 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+
+import com.drzenovka.scrolls.common.item.ItemScroll;
+
 
 public class RecipeColoredScroll implements IRecipe {
 
@@ -21,24 +26,19 @@ public class RecipeColoredScroll implements IRecipe {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack == null) continue;
 
-            if (stack.getItem() == ModItems.paperColored ||
-                stack.getItem() == Items.paper) {
+            if (Utils.isOreDictItem(stack, "paper")) {
                 if (foundPaper) return false;
                 foundPaper = true;
-            }
-            else if (stack.getItem() == net.minecraft.init.Items.feather) {
+            } else if (Utils.isOreDictItem(stack, "quill")) {
                 if (foundFeather) return false;
                 foundFeather = true;
-            }
-            else if (stack.getItem() instanceof ItemDye) {
+            } else if (Utils.isOreDictItem(stack, "ink")) {
                 if (foundDye) return false;
                 foundDye = true;
-            }
-            else {
+            } else {
                 return false; // invalid extra items
             }
         }
-
         return foundPaper && foundFeather && foundDye;
     }
 
@@ -52,16 +52,14 @@ public class RecipeColoredScroll implements IRecipe {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack == null) continue;
 
-            if (stack.getItem() == ModItems.paperColored ||
-                stack.getItem() == Items.paper) {
+            if (Utils.isOreDictItem(stack, "paper")) {
                 paper = stack;
-            } else if (stack.getItem() instanceof ItemDye) {
-                dyeMeta = stack.getItemDamage();
+            } else if (Utils.isOreDictItem(stack, "ink")) {
+                dyeMeta = DyeColorMap.getColorForStack(stack);
             }
         }
 
-        if (paper == null || dyeMeta == -1)
-            return null;
+        if (paper == null || dyeMeta == -1) return null;
 
         // output will be a scroll, same paper colour
         ItemStack result = new ItemStack(ModItems.scrollColored, 1, paper.getItemDamage());
@@ -84,7 +82,9 @@ public class RecipeColoredScroll implements IRecipe {
     }
 
     @Override
-    public int getRecipeSize() { return 3; }
+    public int getRecipeSize() {
+        return 3;
+    }
 
     @Override
     public ItemStack getRecipeOutput() {

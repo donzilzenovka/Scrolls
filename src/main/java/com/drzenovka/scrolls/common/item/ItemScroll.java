@@ -1,8 +1,5 @@
 package com.drzenovka.scrolls.common.item;
 
-import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
-import com.drzenovka.scrolls.client.gui.GuiScroll;
-import com.drzenovka.scrolls.common.util.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+
+import com.drzenovka.scrolls.client.gui.GuiScroll;
+import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
+import com.drzenovka.scrolls.common.util.ColorUtils;
 
 public class ItemScroll extends Item {
 
@@ -50,30 +51,30 @@ public class ItemScroll extends Item {
     /** Get the text stored on the scroll */
     public String getText(ItemStack stack) {
         initNBT(stack);
-        return stack.getTagCompound().getString(NBT_PAGE);
+        return stack.getTagCompound()
+            .getString(NBT_PAGE);
     }
 
     /** Set the text stored on the scroll */
     public void setText(ItemStack stack, String text) {
         initNBT(stack);
-        stack.getTagCompound().setString(NBT_PAGE, text);
+        stack.getTagCompound()
+            .setString(NBT_PAGE, text);
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         // Open GUI only when NOT sneaking
         if (world.isRemote && !player.isSneaking()) {
-            Minecraft.getMinecraft().displayGuiScreen(
-                new GuiScroll(player, player.inventory.currentItem)
-            );
+            Minecraft.getMinecraft()
+                .displayGuiScreen(new GuiScroll(player, player.inventory.currentItem));
         }
         return stack;
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world,
-                             int x, int y, int z, int side,
-                             float hitX, float hitY, float hitZ) {
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+        float hitX, float hitY, float hitZ) {
 
         // Only place scroll when sneaking
         if (!player.isSneaking()) return false;
@@ -93,8 +94,7 @@ public class ItemScroll extends Item {
         };
 
         if (!world.isRemote) {
-            EntityHangingScroll scrollEntity =
-                new EntityHangingScroll(world, x, y, z, direction);
+            EntityHangingScroll scrollEntity = new EntityHangingScroll(world, x, y, z, direction);
 
             // Transfer NBT state
             if (stack.hasTagCompound()) {
@@ -104,8 +104,7 @@ public class ItemScroll extends Item {
                 scrollEntity.scrollAuthor = tag.getString(NBT_AUTHOR);
                 scrollEntity.stampCount = tag.getInteger(STAMP_COUNT);
 
-                for (int i = 0; i < 3; i++)
-                    scrollEntity.stampColors[i] = tag.getInteger(STAMP_COLOR + i);
+                for (int i = 0; i < 3; i++) scrollEntity.stampColors[i] = tag.getInteger(STAMP_COLOR + i);
 
                 scrollEntity.paperColor = tag.getInteger(PAPER_COLOR);
                 scrollEntity.inkColor = tag.getInteger(INK_COLOR);

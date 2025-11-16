@@ -1,5 +1,8 @@
 package com.drzenovka.scrolls.common.core;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.drzenovka.scrolls.common.handler.ConfigHandler;
 import com.drzenovka.scrolls.common.init.ModBlocks;
 import com.drzenovka.scrolls.common.init.ModEntities;
@@ -7,6 +10,7 @@ import com.drzenovka.scrolls.common.init.ModItems;
 import com.drzenovka.scrolls.common.init.ModOreDict;
 import com.drzenovka.scrolls.common.init.ModRecipes;
 import com.drzenovka.scrolls.network.PacketSaveScroll;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -15,8 +19,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Scrolls.MODID, name = Scrolls.NAME, version = Scrolls.VERSION)
 public class Scrolls {
@@ -29,23 +31,22 @@ public class Scrolls {
     public static final Logger LOG = LogManager.getLogger(MODID.toUpperCase());
     public static SimpleNetworkWrapper NETWORK;
 
-        @Mod.Instance(MODID)
+    @Mod.Instance(MODID)
     public static Scrolls instance;
-
 
     @SidedProxy(
         clientSide = "com.drzenovka.scrolls.client.core.ClientProxy",
-        serverSide = "com.drzenovka.scrolls.common.core.CommonProxy"
-    )
+        serverSide = "com.drzenovka.scrolls.common.core.CommonProxy")
     public static CommonProxy proxy;
-
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOG.info("Pre-initializing Scrolls mod...");
         ConfigHandler.init(event.getSuggestedConfigurationFile());
-        FMLCommonHandler.instance().bus().register(new ConfigHandler());
-        //ModVersionChecker.registerModToUpdate(MODID, VERSION, EnumChatFormatting.DARK_PURPLE, versionUrl);
+        FMLCommonHandler.instance()
+            .bus()
+            .register(new ConfigHandler());
+        // ModVersionChecker.registerModToUpdate(MODID, VERSION, EnumChatFormatting.DARK_PURPLE, versionUrl);
 
         NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
         NETWORK.registerMessage(PacketSaveScroll.Handler.class, PacketSaveScroll.class, 0, Side.SERVER);

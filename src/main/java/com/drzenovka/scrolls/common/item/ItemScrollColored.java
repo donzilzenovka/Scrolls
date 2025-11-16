@@ -1,6 +1,9 @@
 package com.drzenovka.scrolls.common.item;
 
-import com.drzenovka.scrolls.common.util.ColorUtils;
+import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
+
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,14 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-import java.util.List;
+import com.drzenovka.scrolls.common.util.ColorUtils;
 
-import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemScrollColored extends ItemScroll {
 
