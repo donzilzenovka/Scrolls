@@ -153,9 +153,13 @@ public class GuiScroll extends GuiScreen {
     }
 
     private void drawTextLines(int x, int y) {
+        NBTTagCompound tag = stack.getTagCompound();
+        int inkColor = ColorUtils.rgbToHex( ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][0],
+                                            ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][1],
+                                            ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][2]);
         final int LEFT_MARGIN = 32, TOP_MARGIN = 32;
         for (int i = 0; i < MAX_LINES; i++) {
-            fontRendererObj.drawString(lines[i], x + LEFT_MARGIN, y + TOP_MARGIN + i * LINE_HEIGHT, 0x000000);
+            fontRendererObj.drawString(lines[i], x + LEFT_MARGIN, y + TOP_MARGIN + i * LINE_HEIGHT, inkColor);
         }
     }
 
@@ -165,7 +169,11 @@ public class GuiScroll extends GuiScreen {
         String beforeCursor = lines[cursorLine];
         int cursorX = x + LEFT_MARGIN + fontRendererObj.getStringWidth(beforeCursor);
         int cursorY = y + TOP_MARGIN + cursorLine * LINE_HEIGHT;
-        fontRendererObj.drawString("_", cursorX, cursorY, 0x000000);
+        NBTTagCompound tag = stack.getTagCompound();
+        int inkColor = ColorUtils.rgbToHex( ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][0],
+            ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][1],
+            ColorUtils.GL11_COLOR_VALUES[tag.getInteger(ItemScroll.INK_COLOR)][2]);
+        fontRendererObj.drawString("_", cursorX, cursorY, inkColor);
     }
 
     private void drawStamp(int x, int y) {

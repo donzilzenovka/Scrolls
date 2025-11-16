@@ -2,11 +2,13 @@ package com.drzenovka.scrolls.client.renderer.entity;
 
 import com.drzenovka.scrolls.client.gui.ScrollTextFormatter;
 import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
+import com.drzenovka.scrolls.common.item.ItemScroll;
 import com.drzenovka.scrolls.common.util.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -38,6 +40,7 @@ public class RenderHangingScroll extends Render {
         int paperColor = scroll.getPaperColor();
         int stampCount = scroll.getStampCount();
         int[] stampColors = scroll.getStampColors();
+        int inkColor = scroll.getInkColor();
 
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
@@ -46,7 +49,7 @@ public class RenderHangingScroll extends Render {
 
         try {
             drawBackground(paperColor);
-            drawText(text);
+            drawText(text, inkColor);
             drawStamps(stampCount, stampColors);
         } finally {
             GL11.glEnable(GL11.GL_LIGHTING);
@@ -69,7 +72,7 @@ public class RenderHangingScroll extends Render {
         GL11.glColor4f(1f, 1f, 1f, 1f);
     }
 
-    private void drawText(String text) {
+    private void drawText(String text, Integer inkColor) {
         if (text.isEmpty()) return;
 
         FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
@@ -86,9 +89,13 @@ public class RenderHangingScroll extends Render {
         final int LEFT_MARGIN = -32;
         final int TOP_MARGIN = -55;
 
+        int color = ColorUtils.rgbToHex( ColorUtils.GL11_COLOR_VALUES[inkColor][0],
+            ColorUtils.GL11_COLOR_VALUES[inkColor][1],
+            ColorUtils.GL11_COLOR_VALUES[inkColor][2]);
+
         for (int i = 0; i < wrappedLines.size(); i++) {
             String line = wrappedLines.get(i);
-            fr.drawString(line, LEFT_MARGIN, TOP_MARGIN + i * LINE_SPACING, 0x3F2F1A);
+            fr.drawString(line, LEFT_MARGIN, TOP_MARGIN + i * LINE_SPACING, color);
         }
 
         GL11.glPopMatrix();

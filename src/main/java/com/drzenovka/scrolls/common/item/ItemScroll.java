@@ -2,12 +2,14 @@ package com.drzenovka.scrolls.common.item;
 
 import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
 import com.drzenovka.scrolls.client.gui.GuiScroll;
+import com.drzenovka.scrolls.common.util.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 public class ItemScroll extends Item {
@@ -17,6 +19,7 @@ public class ItemScroll extends Item {
     public static final String STAMP_COLOR = "stampColor";
     public static final String STAMP_COUNT = "stampCount";
     public static final String PAPER_COLOR = "paperColor";
+    public static final String INK_COLOR = "inkColor";
 
     public ItemScroll() {
         this.setUnlocalizedName("scroll")
@@ -38,6 +41,7 @@ public class ItemScroll extends Item {
                 tag.setInteger(STAMP_COLOR + i, -1);
             }
             tag.setInteger(PAPER_COLOR, this.getDamage(stack));
+            tag.setInteger(INK_COLOR, 15);
 
             stack.setTagCompound(tag);
         }
@@ -104,6 +108,7 @@ public class ItemScroll extends Item {
                     scrollEntity.stampColors[i] = tag.getInteger(STAMP_COLOR + i);
 
                 scrollEntity.paperColor = tag.getInteger(PAPER_COLOR);
+                scrollEntity.inkColor = tag.getInteger(INK_COLOR);
 
                 scrollEntity.syncToWatcher();
             }
@@ -135,11 +140,12 @@ public class ItemScroll extends Item {
 
         NBTTagCompound tag = stack.getTagCompound();
         String editor = tag.getString(NBT_AUTHOR);
-
+        int colorIndex = tag.getInteger(ItemScroll.INK_COLOR);
+        EnumChatFormatting color = ColorUtils.COLOR_ENUMS[colorIndex];
         if (editor != null && !editor.isEmpty()) {
-            list.add("Last inscribed by " + editor);
+            list.add(color + "Last inscribed by " + editor);
         } else {
-            list.add("Blank");
+            list.add(color + "Blank");
         }
     }
 }
