@@ -17,18 +17,6 @@ public class ModRecipes {
             "ink"
         ));
 
-        /*
-        //stamped scrolls and wax
-        for (int i = 0; i < 16; i++) {
-            GameRegistry.addShapelessRecipe(
-                new ItemStack(ModItems.scrollStamped, 1, i),
-                new ItemStack(ModItems.scrollColored),
-                new ItemStack(ModItems.wax, 1, i)
-            );
-        }
-
-         */
-
         //colored paper
         for (int i = 0; i < 15; i++) {
             ItemStack result = new ItemStack(ModItems.paperColored, 1, i);
@@ -38,17 +26,17 @@ public class ModRecipes {
             );
         }
 
-        //colored scrolls
+        ////colored scrolls
         for (int i = 0; i < 15; i++) {
             ItemStack result = new ItemStack(ModItems.scrollColored, 1, i);
             GameRegistry.addShapelessRecipe(result,
                 new ItemStack(ModItems.paperColored, 1, i),
-                new ItemStack(Items.feather)
+                new ItemStack(Items.feather),
+                new ItemStack(Items.dye, 1, 0)
             );
         }
 
         //StampedScrolls
         GameRegistry.addRecipe(new RecipeStampScroll());
-
     }
 }

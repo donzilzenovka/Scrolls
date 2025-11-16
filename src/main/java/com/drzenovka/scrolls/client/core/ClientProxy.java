@@ -23,13 +23,5 @@ public class ClientProxy extends CommonProxy {
 
     public static final SimpleNetworkWrapper NETWORK =
         NetworkRegistry.INSTANCE.newSimpleChannel("scrolls");
-
-
-
-
-
-
-        // Register entity server-side (optional here, already in CommonProxy)
-        // EntityRegistry.registerModEntity(EntityHangingScroll.class, "HangingScroll", 0, com.drzenovka.scrolls.Scrolls.instance, 64, 1, false);
     }
 

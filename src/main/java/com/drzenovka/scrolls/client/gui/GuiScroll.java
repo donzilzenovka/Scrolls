@@ -2,7 +2,6 @@ package com.drzenovka.scrolls.client.gui;
 
 import com.drzenovka.scrolls.common.item.ItemScroll;
 import com.drzenovka.scrolls.common.item.ItemScrollColored;
-import com.drzenovka.scrolls.common.item.ItemScrollStamped;
 import com.drzenovka.scrolls.common.util.ColorUtils;
 import com.drzenovka.scrolls.network.PacketSaveScroll;
 import com.drzenovka.scrolls.common.core.Scrolls;
@@ -130,8 +129,11 @@ public class GuiScroll extends GuiScreen {
         int x = (width - guiWidth) / 2;
         int y = (height - guiHeight) / 2;
 
-        int meta = stack != null ? stack.getItemDamage() : 0;
-        if (meta < 0 || meta >= ColorUtils.GL11_COLOR_VALUES.length) meta = 0;
+        NBTTagCompound tag = stack.getTagCompound();
+        if (tag == null) return;
+
+        int meta = tag.getInteger(ItemScroll.PAPER_COLOR);
+
 
         float[] color = ColorUtils.GL11_COLOR_VALUES[meta];
         GL11.glColor4f(color[0], color[1], color[2], 1f);
@@ -151,7 +153,7 @@ public class GuiScroll extends GuiScreen {
     }
 
     private void drawTextLines(int x, int y) {
-        final int LEFT_MARGIN = 32, TOP_MARGIN = 42;
+        final int LEFT_MARGIN = 32, TOP_MARGIN = 32;
         for (int i = 0; i < MAX_LINES; i++) {
             fontRendererObj.drawString(lines[i], x + LEFT_MARGIN, y + TOP_MARGIN + i * LINE_HEIGHT, 0x000000);
         }
@@ -159,7 +161,7 @@ public class GuiScroll extends GuiScreen {
 
     private void drawCursor(int x, int y) {
         if ((cursorTick / 6) % 2 != 0 || cursorLine >= MAX_LINES) return;
-        final int LEFT_MARGIN = 32, TOP_MARGIN = 42;
+        final int LEFT_MARGIN = 32, TOP_MARGIN = 32;
         String beforeCursor = lines[cursorLine];
         int cursorX = x + LEFT_MARGIN + fontRendererObj.getStringWidth(beforeCursor);
         int cursorY = y + TOP_MARGIN + cursorLine * LINE_HEIGHT;
@@ -180,11 +182,6 @@ public class GuiScroll extends GuiScreen {
         for (int i = 0; i < count; i++) {
             int color = tag.getInteger("stampColor" + i);
 
-            // Convert from 0xRRGGBB to GL floats
-            //float r = ((color >> 16) & 0xFF) / 255f;
-            //float g = ((color >> 8)  & 0xFF) / 255f;
-            //float b = (color & 0xFF) / 255f;
-
             int dyeMeta = tag.getInteger("stampColor" + i);  // THIS is the lookup index
             if (dyeMeta < 0 || dyeMeta >= ColorUtils.GL11_COLOR_VALUES.length) {
                 dyeMeta = 0; // safety fallback
@@ -194,13 +191,8 @@ public class GuiScroll extends GuiScreen {
             float g = ColorUtils.GL11_COLOR_VALUES[dyeMeta][1];
             float b = ColorUtils.GL11_COLOR_VALUES[dyeMeta][2];
 
-            //float r = ColorUtils.GL11_COLOR_VALUES[i][0];
-            //float g = ColorUtils.GL11_COLOR_VALUES[i][1];
-            //float b = ColorUtils.GL11_COLOR_VALUES[i][2];
-            //System.out.println("color: " + color);
-            //System.out.print("r:" + r + " g:" + g + " b:" + b + "\\n");
             GL11.glColor4f(r,g,b,1f);
-            drawCustomSizedTexture(x + 30 + i * 4 + i, y + 150 + i - i ^ i , 0, 0, 16, 16, 16, 16);
+            drawCustomSizedTexture(x + 30 + i * 7, y + 150 , 0, 0, 16, 16, 16, 16);
         }
 
         GL11.glColor4f(1,1,1,1);

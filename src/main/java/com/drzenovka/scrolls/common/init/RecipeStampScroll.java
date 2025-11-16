@@ -6,6 +6,7 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraft.world.World;
 
 public class RecipeStampScroll implements IRecipe {
@@ -45,7 +46,6 @@ public class RecipeStampScroll implements IRecipe {
         return foundScroll && foundStamp && foundDye;
     }
 
-
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
         ItemStack scroll = null;
@@ -83,10 +83,8 @@ public class RecipeStampScroll implements IRecipe {
         }
 
         output.setTagCompound(tag);
-        System.out.println(output);
         return output;
     }
-
 
     @Override
     public int getRecipeSize() {

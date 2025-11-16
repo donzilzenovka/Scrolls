@@ -10,15 +10,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import java.util.Objects;
-
 public class ItemScroll extends Item {
 
     public static final String NBT_PAGE = "page";
     public static final String NBT_AUTHOR = "author";
     public static final String STAMP_COLOR = "stampColor";
     public static final String STAMP_COUNT = "stampCount";
-
+    public static final String PAPER_COLOR = "paperColor";
 
     public ItemScroll() {
         this.setUnlocalizedName("scroll")
@@ -28,7 +26,7 @@ public class ItemScroll extends Item {
     }
 
     /** Initialize NBT for a new scroll */
-    private void initNBT(ItemStack stack) {
+    protected void initNBT(ItemStack stack) {
         if (!stack.hasTagCompound()) {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setString(NBT_PAGE, "");
@@ -39,6 +37,7 @@ public class ItemScroll extends Item {
             for (int i = 0; i < 3; i++) {
                 tag.setInteger(STAMP_COLOR + i, -1);
             }
+            tag.setInteger(PAPER_COLOR, this.getDamage(stack));
 
             stack.setTagCompound(tag);
         }
@@ -90,15 +89,31 @@ public class ItemScroll extends Item {
         };
 
         if (!world.isRemote) {
-            EntityHangingScroll scrollEntity = new EntityHangingScroll(world, x, y, z, direction);
-            // Transfer NBT
-            if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_PAGE)) {
-                scrollEntity.setScrollText(stack.getTagCompound().getString(NBT_PAGE));
+            EntityHangingScroll scrollEntity =
+                new EntityHangingScroll(world, x, y, z, direction);
+
+            // Transfer NBT state
+            if (stack.hasTagCompound()) {
+                NBTTagCompound tag = stack.getTagCompound();
+
+                scrollEntity.scrollText = tag.getString(NBT_PAGE);
+                scrollEntity.scrollAuthor = tag.getString(NBT_AUTHOR);
+                scrollEntity.stampCount = tag.getInteger(STAMP_COUNT);
+
+                for (int i = 0; i < 3; i++)
+                    scrollEntity.stampColors[i] = tag.getInteger(STAMP_COLOR + i);
+
+                scrollEntity.paperColor = tag.getInteger(PAPER_COLOR);
+
+                scrollEntity.syncToWatcher();
             }
+
             if (!scrollEntity.onValidSurface()) return false;
+
             world.spawnEntityInWorld(scrollEntity);
+
             if (!player.capabilities.isCreativeMode) {
-                --stack.stackSize;
+                stack.stackSize--;
             }
         }
         return true;
@@ -117,10 +132,7 @@ public class ItemScroll extends Item {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, java.util.List list, boolean advanced) {
         initNBT(stack);
-        //if (!stack.hasTagCompound()) {
-        //    list.add("Blank");
-        //    return;
-        //}
+
         NBTTagCompound tag = stack.getTagCompound();
         String editor = tag.getString(NBT_AUTHOR);
 

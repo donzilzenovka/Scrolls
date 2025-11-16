@@ -12,6 +12,7 @@ import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -27,7 +28,6 @@ public class ItemScrollColored extends ItemScroll {
             .setMaxDamage(0)
             .setMaxStackSize(1)
             .setCreativeTab(CreativeTabs.tabMisc);
-
     }
 
     @Override
@@ -59,6 +59,11 @@ public class ItemScrollColored extends ItemScroll {
     }
 
     @Override
+    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
+        initNBT(stack);
+    }
+
+    @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
         super.addInformation(stack, player, list, advanced);
 
@@ -74,22 +79,6 @@ public class ItemScrollColored extends ItemScroll {
             String tooltipKey = "tooltip.scroll.stamp." + stampColor; // assumes keys like tooltip.scroll.stamp.0
             list.add(color + StatCollector.translateToLocal(tooltipKey));
         }
-        /*
-        int meta = stack.getItemDamage();
-        // Get localized stamp text
-        String baseText = StatCollector.translateToLocal("tooltip.scroll.stamp." + COLOR_NAMES[meta]);
-
-
-        EnumChatFormatting color = ColorUtils.COLOR_ENUMS[meta % ColorUtils.COLOR_ENUMS.length];
-        list.add(color + baseText);
-
-
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("stampColor")) {
-            int c = stack.getTagCompound().getInteger("stampColor");
-            list.add(String.format("Stamp Color: #%06X", c));
-        }
-
-         */
     }
 
 }

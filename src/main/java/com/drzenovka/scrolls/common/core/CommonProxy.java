@@ -1,8 +1,6 @@
 package com.drzenovka.scrolls.common.core;
 
-import com.drzenovka.scrolls.common.core.Scrolls;
 import com.drzenovka.scrolls.common.handler.EntityHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.entity.player.EntityPlayer;
