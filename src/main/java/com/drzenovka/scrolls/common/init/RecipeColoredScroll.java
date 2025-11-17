@@ -13,6 +13,10 @@ import net.minecraft.world.World;
 
 import com.drzenovka.scrolls.common.item.ItemScroll;
 
+import static com.drzenovka.scrolls.common.init.ModOreDict.INK;
+import static com.drzenovka.scrolls.common.init.ModOreDict.PARCHMENT;
+import static com.drzenovka.scrolls.common.init.ModOreDict.QUILL;
+
 
 public class RecipeColoredScroll implements IRecipe {
 
@@ -26,13 +30,13 @@ public class RecipeColoredScroll implements IRecipe {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack == null) continue;
 
-            if (Utils.isOreDictItem(stack, "paper")) {
+            if (Utils.isOreDictItem(stack, PARCHMENT)) {
                 if (foundPaper) return false;
                 foundPaper = true;
-            } else if (Utils.isOreDictItem(stack, "quill")) {
+            } else if (Utils.isOreDictItem(stack, QUILL)) {
                 if (foundFeather) return false;
                 foundFeather = true;
-            } else if (Utils.isOreDictItem(stack, "ink")) {
+            } else if (Utils.isOreDictItem(stack, INK)) {
                 if (foundDye) return false;
                 foundDye = true;
             } else {
@@ -52,9 +56,9 @@ public class RecipeColoredScroll implements IRecipe {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack == null) continue;
 
-            if (Utils.isOreDictItem(stack, "paper")) {
+            if (Utils.isOreDictItem(stack, PARCHMENT)) {
                 paper = stack;
-            } else if (Utils.isOreDictItem(stack, "ink")) {
+            } else if (Utils.isOreDictItem(stack, INK)) {
                 dyeMeta = DyeColorMap.getColorForStack(stack);
             }
         }
@@ -64,8 +68,8 @@ public class RecipeColoredScroll implements IRecipe {
         // output will be a scroll, same paper colour
         ItemStack result = new ItemStack(ModItems.scrollColored, 1, paper.getItemDamage());
 
-        // convert 0–15 dye to your internal colour
-        int inkColor = 15 - dyeMeta; // same as stamp invert logic
+        int inkColor = dyeMeta;
+        System.out.println("dyeMeta:" + dyeMeta);
         int paperColor = paper.getItemDamage();
 
         // set ink color NBT
