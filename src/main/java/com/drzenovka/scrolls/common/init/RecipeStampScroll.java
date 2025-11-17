@@ -3,15 +3,12 @@ package com.drzenovka.scrolls.common.init;
 import com.drzenovka.scrolls.common.util.DyeColorMap;
 import com.drzenovka.scrolls.common.util.Utils;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import static com.drzenovka.scrolls.common.init.ModOreDict.INK;
-import static com.drzenovka.scrolls.common.init.ModOreDict.PARCHMENT;
-import static com.drzenovka.scrolls.common.util.Utils.isOreDictItem;
 
 public class RecipeStampScroll implements IRecipe {
 

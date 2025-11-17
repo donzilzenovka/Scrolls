@@ -17,12 +17,6 @@ public class EntityHangingScroll extends EntityItemFrame {
     private static final float WIDTH_BLOCKS = WIDTH_PIXELS / 16.0F;
     private static final float HEIGHT_BLOCKS = HEIGHT_PIXELS / 16.0F;
 
-    // private static final int DW_SCROLL_TEXT = 10;
-    // private static final int DW_SCROLL_AUTHOR = 11;
-    // private static final int DW_STAMP_COUNT = 12;
-    // private static final int DW_STAMP_COLORS = 13;
-    // private static final int DW_PAPER_COLOR = 14;
-
     private static final int DW_SCROLL_DATA = 10;
     private static final int IDX_NBT_TEXT = 0;
     private static final int IDX_NBT_AUTHOR = 1;
@@ -33,7 +27,6 @@ public class EntityHangingScroll extends EntityItemFrame {
     private static final int IDX_PAPER_COLOR = 6;
     private static final int IDX_INK_COLOR = 7;
 
-    String[] scrollData = new String[] { "", "", "0", "-1", "-1", "-1", "0", "15" };
     public String scrollText = "Dr Zenovka was here";
     public String scrollAuthor = "";
     public int paperColor = 0;
@@ -50,36 +43,23 @@ public class EntityHangingScroll extends EntityItemFrame {
 
     public EntityHangingScroll(World world, int x, int y, int z, int side) {
         super(world, x, y, z, side);
-        // this.setSize(WIDTH_BLOCKS, HEIGHT_BLOCKS);
         this.ignoreFrustumCheck = true;
     }
 
     public String getScrollText() {
-        // always prefer synced watcher value
-        // return this.dataWatcher.getWatchableObjectString(DW_SCROLL_TEXT);
         return getMultiString(IDX_NBT_TEXT);
     }
 
     public Integer getPaperColor() {
-        // always prefer synced watcher value
-        // return this.dataWatcher.getWatchableObjectInt(DW_PAPER_COLOR);
         return getMultiInt(IDX_PAPER_COLOR);
     }
 
     public Integer getStampCount() {
-        // return this.dataWatcher.getWatchableObjectInt(DW_STAMP_COUNT);
         return getMultiInt(IDX_STAMP_COUNT);
     }
 
     // Getter
     public int[] getStampColors() {
-        // String s = this.dataWatcher.getWatchableObjectString(DW_STAMP_COLORS);
-        // String[] parts = s.split(",");
-        // int[] result = new int[parts.length];
-        // for (int i = 0; i < parts.length; i++) {
-        // result[i] = Integer.parseInt(parts[i]);
-        // }
-        // return result;
         int[] stamp_colors = new int[3];
         for (int i = 0; i < 3; i++) {
             stamp_colors[i] = getMultiInt(IDX_STAMP_COLOR0 + i);
@@ -101,29 +81,10 @@ public class EntityHangingScroll extends EntityItemFrame {
     @Override
     protected void entityInit() {
         super.entityInit();
-        // index 30 is usually safe for mod entities; vanilla ItemFrame stops earlier
-        // this.dataWatcher.addObject(DW_SCROLL_TEXT, ""); // text
-        // this.dataWatcher.addObject(DW_SCROLL_AUTHOR, ""); // author
-        // this.dataWatcher.addObject(DW_STAMP_COUNT, 0); // stampCount
-        // this.dataWatcher.addObject(DW_STAMP_COLORS, "-1,-1,-1"); // stampColors CSV ("3,4,5")
-        // this.dataWatcher.addObject(DW_PAPER_COLOR, 0); //Paper color
-        // Initial default values:
-
-        // scrollData = new String[] {"", "", "0", "-1", "-1", "-1", "0", "0"};
-        // dataWatcher.addObject(DW_SCROLL_DATA, String.join(",", scrollData));
         this.dataWatcher.addObject(DW_SCROLL_DATA, ""); // empty, but not null
     }
 
     public void syncToWatcher() {
-        // this.dataWatcher.updateObject(DW_SCROLL_TEXT, scrollText);
-        // this.dataWatcher.updateObject(DW_SCROLL_AUTHOR, scrollAuthor);
-        // this.dataWatcher.updateObject(DW_STAMP_COUNT, stampCount);
-
-        // compact colours into a CSV string
-        // this.dataWatcher.updateObject(DW_STAMP_COLORS,
-        // stampColors[0] + "," + stampColors[1] + "," + stampColors[2]);
-
-        // this.dataWatcher.updateObject(DW_PAPER_COLOR, paperColor);
         setMultiString(IDX_NBT_TEXT, scrollText);
         setMultiString(IDX_NBT_AUTHOR, scrollAuthor);
         setMultiInt(IDX_STAMP_COUNT, stampCount);
@@ -134,18 +95,6 @@ public class EntityHangingScroll extends EntityItemFrame {
     }
 
     public void syncFromWatcher() {
-        // scrollText = dataWatcher.getWatchableObjectString(DW_SCROLL_TEXT);
-        // scrollAuthor = dataWatcher.getWatchableObjectString(DW_SCROLL_AUTHOR);
-        // stampCount = dataWatcher.getWatchableObjectInt(DW_STAMP_COUNT);
-
-        // String csv = dataWatcher.getWatchableObjectString(DW_STAMP_COLORS);
-        // String[] split = csv.split(",");
-        // for (int i = 0; i < 3 && i < split.length; i++) {
-        // try { stampColors[i] = Integer.parseInt(split[i]); }
-        // catch (Exception ignored) { stampColors[i] = -1; }
-        // }
-
-        // paperColor = dataWatcher.getWatchableObjectInt(DW_PAPER_COLOR);
         scrollText = getMultiString(IDX_NBT_TEXT);
         scrollAuthor = getMultiString(IDX_NBT_AUTHOR);
         stampCount = getMultiInt(IDX_STAMP_COUNT);
@@ -158,33 +107,56 @@ public class EntityHangingScroll extends EntityItemFrame {
     @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
-        // nbt.setString("ScrollText", scrollText);
-        // nbt.setString("ScrollAuthor", scrollAuthor);
-        // nbt.setInteger("StampCount", stampCount);
 
-        // for (int i = 0; i < 3; i++) {
-        // nbt.setInteger("StampColor" + i, stampColors[i]);
-        // }
+        // Build CSV directly from the entity fields (not from dataWatcher)
+        String[] arr = new String[8];
 
-        // nbt.setInteger("PaperColor", paperColor);
-        nbt.setString("ScrollData", String.join(",", getMultiArray()));
+        // strings
+        arr[IDX_NBT_TEXT] = (scrollText == null ? "" : scrollText);
+        arr[IDX_NBT_AUTHOR] = (scrollAuthor == null ? "" : scrollAuthor);
+
+        // ints
+        arr[IDX_STAMP_COUNT] = Integer.toString(stampCount);
+        arr[IDX_STAMP_COLOR0] = Integer.toString(stampColors.length > 0 ? stampColors[0] : -1);
+        arr[IDX_STAMP_COLOR1] = Integer.toString(stampColors.length > 1 ? stampColors[1] : -1);
+        arr[IDX_STAMP_COLOR2] = Integer.toString(stampColors.length > 2 ? stampColors[2] : -1);
+        arr[IDX_PAPER_COLOR] = Integer.toString(paperColor);
+        arr[IDX_INK_COLOR] = Integer.toString(inkColor);
+
+        nbt.setString("ScrollData", String.join(",", arr));
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
-        // scrollText = nbt.getString("ScrollText");
-        // scrollAuthor = nbt.getString("ScrollAuthor");
-        // stampCount = nbt.getInteger("StampCount");
 
-        // for (int i = 0; i < 3; i++)
-        // stampColors[i] = nbt.getInteger("StampColor" + i);
+        String csv = nbt.hasKey("ScrollData") ? nbt.getString("ScrollData") : "";
+        String[] parts = csv.split(",", -1);
 
-        // paperColor = nbt.getInteger("PaperColor");
-        String csv = nbt.getString("ScrollData");
-        scrollData = csv.split(",", -1);
+        // Ensure length and defaults
+        String[] arr = new String[8];
+        for (int i = 0; i < 8; i++) {
+            if (i < parts.length) arr[i] = parts[i];
+            else {
+                // sensible defaults: empty strings for the first two, numeric defaults for rest
+                arr[i] = (i <= IDX_NBT_AUTHOR) ? "" : "0";
+            }
+        }
 
-        syncFromWatcher();
+        // Populate entity fields directly from arr (do NOT immediately rely on dataWatcher)
+        scrollText = arr[IDX_NBT_TEXT];
+        scrollAuthor = arr[IDX_NBT_AUTHOR];
+
+        try { stampCount = Integer.parseInt(arr[IDX_STAMP_COUNT]); } catch (Exception e) { stampCount = 0; }
+        try { stampColors[0] = Integer.parseInt(arr[IDX_STAMP_COLOR0]); } catch (Exception e) { stampColors[0] = -1; }
+        try { stampColors[1] = Integer.parseInt(arr[IDX_STAMP_COLOR1]); } catch (Exception e) { stampColors[1] = -1; }
+        try { stampColors[2] = Integer.parseInt(arr[IDX_STAMP_COLOR2]); } catch (Exception e) { stampColors[2] = -1; }
+
+        try { paperColor = Integer.parseInt(arr[IDX_PAPER_COLOR]); } catch (Exception e) { paperColor = 0; }
+        try { inkColor = Integer.parseInt(arr[IDX_INK_COLOR]); } catch (Exception e) { inkColor = 15; }
+
+        // Now push to watcher so clients receive updated data
+        setMultiArray(arr);
     }
 
     @Override

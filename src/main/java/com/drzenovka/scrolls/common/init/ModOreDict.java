@@ -69,6 +69,9 @@ public final class ModOreDict {
         OreDictionary.registerOre(DYE_ORANGE, new ItemStack(Items.dye, 1, 14));
         OreDictionary.registerOre(DYE_WHITE, new ItemStack(Items.dye, 1, 15));
 
+        OreDictionary.registerOre(DYE_BROWN, new ItemStack(Blocks.dirt, 1));
+        OreDictionary.registerOre(DYE_BROWN, new ItemStack(Items.stick, 1));
+
 
         String[] vanillaDyes = {
             DYE_WHITE, DYE_ORANGE, DYE_MAGENTA, DYE_LIGHT_BLUE,
