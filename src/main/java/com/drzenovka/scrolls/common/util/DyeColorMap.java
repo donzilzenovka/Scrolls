@@ -44,33 +44,10 @@ public class DyeColorMap {
         DYE_TO_COLOR.put(DYE_RED, 14);
         DYE_TO_COLOR.put(DYE_BLACK, 15);
     }
-    /*
-    public static int getColorForStack(ItemStack stack) {
-        for (int id : OreDictionary.getOreIDs(stack)) {
-            String name = OreDictionary.getOreName(id);
-            System.out.println("Stack: " + stack.getUnlocalizedName() +", Meta: " + id + ", oreName: " + name);
-            if (DYE_TO_COLOR.containsKey(name)) {
-                return DYE_TO_COLOR.get(name);
-            }
-        }
-        return -1; // invalid
-    }
-    
-     */
 
     public static int getColorForStack(ItemStack stack) {
-        int meta = stack.getItemDamage();
-
         for (int oreID : OreDictionary.getOreIDs(stack)) {
             String name = OreDictionary.getOreName(oreID);
-
-            System.out.println(
-                "Stack: " + stack.getUnlocalizedName() +
-                    ", Meta: " + meta +
-                    ", oreName: " + name +
-                    ", oreID: " + oreID
-            );
-
             if (DYE_TO_COLOR.containsKey(name)) {
                 return DYE_TO_COLOR.get(name);
             }

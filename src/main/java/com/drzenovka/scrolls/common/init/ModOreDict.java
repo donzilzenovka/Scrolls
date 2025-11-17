@@ -52,22 +52,23 @@ public final class ModOreDict {
             OreDictionary.registerOre(WAX + capitalize(color), new ItemStack(ModItems.wax, 1, i));
         }
 
-        OreDictionary.registerOre(DYE_WHITE, new ItemStack(Items.dye, 1, 0));
-        OreDictionary.registerOre(DYE_ORANGE, new ItemStack(Items.dye, 1, 1));
-        OreDictionary.registerOre(DYE_MAGENTA, new ItemStack(Items.dye, 1, 2));
-        OreDictionary.registerOre(DYE_LIGHT_BLUE, new ItemStack(Items.dye, 1, 3));
-        OreDictionary.registerOre(DYE_YELLOW, new ItemStack(Items.dye, 1, 4));
-        OreDictionary.registerOre(DYE_LIME, new ItemStack(Items.dye, 1, 5));
-        OreDictionary.registerOre(DYE_PINK, new ItemStack(Items.dye, 1, 6));
-        OreDictionary.registerOre(DYE_GRAY, new ItemStack(Items.dye, 1, 7));
-        OreDictionary.registerOre(DYE_LIGHT_GRAY, new ItemStack(Items.dye, 1, 8));
-        OreDictionary.registerOre(DYE_CYAN, new ItemStack(Items.dye, 1, 9));
-        OreDictionary.registerOre(DYE_PURPLE, new ItemStack(Items.dye, 1, 10));
-        OreDictionary.registerOre(DYE_BLUE, new ItemStack(Items.dye, 1, 11));
-        OreDictionary.registerOre(DYE_BROWN, new ItemStack(Items.dye, 1, 12));
-        OreDictionary.registerOre(DYE_GREEN, new ItemStack(Items.dye, 1, 13));
-        OreDictionary.registerOre(DYE_RED, new ItemStack(Items.dye, 1, 14));
-        OreDictionary.registerOre(DYE_BLACK, new ItemStack(Items.dye, 1, 15));
+        OreDictionary.registerOre(DYE_BLACK, new ItemStack(Items.dye, 1, 0));
+        OreDictionary.registerOre(DYE_RED, new ItemStack(Items.dye, 1, 1));
+        OreDictionary.registerOre(DYE_GREEN, new ItemStack(Items.dye, 1, 2));
+        OreDictionary.registerOre(DYE_BROWN, new ItemStack(Items.dye, 1, 3));
+        OreDictionary.registerOre(DYE_BLUE, new ItemStack(Items.dye, 1, 4));
+        OreDictionary.registerOre(DYE_PURPLE, new ItemStack(Items.dye, 1, 5));
+        OreDictionary.registerOre(DYE_CYAN, new ItemStack(Items.dye, 1, 6));
+        OreDictionary.registerOre(DYE_LIGHT_GRAY, new ItemStack(Items.dye, 1, 7));
+        OreDictionary.registerOre(DYE_GRAY, new ItemStack(Items.dye, 1, 8));
+        OreDictionary.registerOre(DYE_PINK, new ItemStack(Items.dye, 1, 9));
+        OreDictionary.registerOre(DYE_LIME, new ItemStack(Items.dye, 1, 10));
+        OreDictionary.registerOre(DYE_YELLOW, new ItemStack(Items.dye, 1, 11));
+        OreDictionary.registerOre(DYE_LIGHT_BLUE, new ItemStack(Items.dye, 1, 12));
+        OreDictionary.registerOre(DYE_MAGENTA, new ItemStack(Items.dye, 1, 13));
+        OreDictionary.registerOre(DYE_ORANGE, new ItemStack(Items.dye, 1, 14));
+        OreDictionary.registerOre(DYE_WHITE, new ItemStack(Items.dye, 1, 15));
+
 
         String[] vanillaDyes = {
             DYE_WHITE, DYE_ORANGE, DYE_MAGENTA, DYE_LIGHT_BLUE,
