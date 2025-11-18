@@ -1,5 +1,6 @@
-package com.drzenovka.scrolls.client.gui;
+package com.drzenovka.scrolls.common.handler;
 
+import com.drzenovka.scrolls.client.gui.GuiScroll;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;

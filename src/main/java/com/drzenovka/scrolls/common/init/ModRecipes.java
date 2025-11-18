@@ -22,7 +22,7 @@ public class ModRecipes {
         GameRegistry.addShapelessRecipe(new ItemStack(ModItems.stamp),
         new ItemStack(Items.potato),
         new ItemStack(Items.stick));
-        
+
         // StampedScrolls
         GameRegistry.addRecipe(new RecipeStampScroll());
         GameRegistry.addRecipe(new RecipeColoredScroll());

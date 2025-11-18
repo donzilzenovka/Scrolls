@@ -45,10 +45,10 @@ public class RenderHangingScroll extends Render {
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
         GL11.glRotatef(scroll.rotationYaw, 0, 1, 0);
-        GL11.glDisable(GL11.GL_LIGHTING);
 
         try {
             drawBackground(paperColor);
+            GL11.glDisable(GL11.GL_LIGHTING);
             drawText(text, inkColor);
             drawStamps(stampCount, stampColors);
         } finally {

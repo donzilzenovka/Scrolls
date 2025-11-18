@@ -1,6 +1,7 @@
 package com.drzenovka.scrolls.common.entity;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,6 +10,8 @@ import net.minecraft.world.World;
 
 import com.drzenovka.scrolls.common.init.ModItems;
 import com.drzenovka.scrolls.common.item.ItemScroll;
+
+import java.util.List;
 
 public class EntityHangingScroll extends EntityItemFrame {
 
@@ -83,6 +86,28 @@ public class EntityHangingScroll extends EntityItemFrame {
         super.entityInit();
         this.dataWatcher.addObject(DW_SCROLL_DATA, ""); // empty, but not null
     }
+
+    @Override
+    public boolean onValidSurface() {
+        if (!this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty()) {
+            return false;
+        }
+
+        // Also check for ANY hanging entities in the same spot
+        List entities = this.worldObj.getEntitiesWithinAABBExcludingEntity(
+            this,
+            this.boundingBox.expand(0.01D, 0.01D, 0.01D)
+        );
+
+        for (Object o : entities) {
+            if (o instanceof EntityHanging) {
+                return false; // another scroll, frame, painting, etc.
+            }
+        }
+
+        return super.onValidSurface();
+    }
+
 
     public void syncToWatcher() {
         setMultiString(IDX_NBT_TEXT, scrollText);

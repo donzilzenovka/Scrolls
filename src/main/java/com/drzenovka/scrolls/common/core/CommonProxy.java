@@ -1,10 +1,9 @@
 package com.drzenovka.scrolls.common.core;
 
+import com.drzenovka.scrolls.common.handler.FuelHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-
-import com.drzenovka.scrolls.common.handler.EntityHandler;
 
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -16,7 +15,7 @@ public class CommonProxy implements IGuiHandler {
     }
 
     private void registerHandlers() {
-        MinecraftForge.EVENT_BUS.register((new EntityHandler()));
+        GameRegistry.registerFuelHandler(new FuelHandler());
         NetworkRegistry.INSTANCE.registerGuiHandler(Scrolls.instance, Scrolls.proxy);
     }
 
