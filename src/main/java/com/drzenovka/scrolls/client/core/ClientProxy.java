@@ -1,11 +1,14 @@
 package com.drzenovka.scrolls.client.core;
 
 import com.drzenovka.scrolls.client.renderer.RenderInkBottle;
+import com.drzenovka.scrolls.client.renderer.TESRInkCauldron;
 import com.drzenovka.scrolls.client.renderer.entity.RenderHangingScroll;
 import com.drzenovka.scrolls.common.core.CommonProxy;
 import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
 
 import com.drzenovka.scrolls.common.init.ModItems;
+import com.drzenovka.scrolls.common.tileentity.TileEntityInkCauldron;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -25,6 +28,9 @@ public class ClientProxy extends CommonProxy {
     public void registerRenderers() {
         RenderingRegistry.registerEntityRenderingHandler(EntityHangingScroll.class, new RenderHangingScroll());
         MinecraftForgeClient.registerItemRenderer(ModItems.inkBottle, new RenderInkBottle());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInkCauldron.class, new TESRInkCauldron());
+
+
 
     }
 
