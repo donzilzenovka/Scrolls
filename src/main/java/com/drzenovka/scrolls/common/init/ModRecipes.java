@@ -5,6 +5,7 @@ import com.drzenovka.scrolls.common.util.Utils;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import static com.drzenovka.scrolls.common.util.ColorUtils.DYE_NAME_LIST;
@@ -23,8 +24,29 @@ public class ModRecipes {
         new ItemStack(Items.potato),
         new ItemStack(Items.stick));
 
+
+
         // StampedScrolls
         GameRegistry.addRecipe(new RecipeStampScroll());
         GameRegistry.addRecipe(new RecipeColoredScroll());
+        addInkBottleRecipes();
+    }
+
+    public static void addInkBottleRecipes() {
+
+        ItemStack waterBottle = new ItemStack(Items.potionitem, 1, 0);
+
+        // 0–15 vanilla dye colours (reverse order as 1.7.10 uses)
+        for (int meta = 0; meta < 16; meta++) {
+            String oreName = "dye" + ColorUtils.COLOR_NAMES[meta];  // defined below
+
+            if (OreDictionary.doesOreNameExist(oreName)) {
+                GameRegistry.addRecipe(new ShapelessOreRecipe(
+                    new ItemStack(ModItems.inkBottle, 1, meta),
+                    waterBottle,
+                    oreName
+                ));
+            }
+        }
     }
 }
