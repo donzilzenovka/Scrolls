@@ -20,16 +20,15 @@ import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
 
 public class ItemInkBottle extends Item {
 
-    public static final int MAX_USES = 8;   // adjust as you like
+    public static final int MAX_USES = 8;   // number of uses before empty
     private IIcon bottleIcon;
     private IIcon overlayIcon;
-
 
     public ItemInkBottle() {
         this.setHasSubtypes(true)
             .setMaxDamage(0)
             .setMaxStackSize(1)
-            .setCreativeTab(net.minecraft.creativetab.CreativeTabs.tabMisc)
+            .setCreativeTab(CreativeTabs.tabMisc)
             .setUnlocalizedName("ink_bottle");
     }
 
@@ -41,7 +40,7 @@ public class ItemInkBottle extends Item {
     @Override
     public void registerIcons(IIconRegister reg){
         this.bottleIcon = reg.registerIcon("scrolls:ink_bottle_base");
-        this.overlayIcon = reg.registerIcon("Scrolls:ink_bottle_overlay");
+        this.overlayIcon = reg.registerIcon("scrolls:ink_bottle_overlay");
     }
 
     @Override
@@ -51,9 +50,7 @@ public class ItemInkBottle extends Item {
 
     @Override
     public int getColorFromItemStack(ItemStack stack, int pass) {
-
-        if (pass == 0)
-            return 0xFFFFFF; // bottle not tinted
+        if (pass == 0) return 0xFFFFFF; // base bottle not tinted
 
         return ColorUtils.rgbToHex(
             ColorUtils.GL11_COLOR_VALUES[stack.getItemDamage()][0],
@@ -61,82 +58,57 @@ public class ItemInkBottle extends Item {
             ColorUtils.GL11_COLOR_VALUES[stack.getItemDamage()][2]);
     }
 
-
     @Override
     public String getUnlocalizedName(ItemStack stack) {
         return super.getUnlocalizedName() + "." + stack.getItemDamage();
     }
 
-    // Create NBT if missing
+    // ---------------- Container Logic ----------------
+
+    @Override
+    public boolean hasContainerItem(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public ItemStack getContainerItem(ItemStack stack) {
+        ItemStack copy = stack.copy();
+        NBTTagCompound tag = copy.getTagCompound();
+        if (tag == null) {
+            tag = new NBTTagCompound();
+            copy.setTagCompound(tag);
+        }
+
+        int uses = tag.getInteger("uses");
+        uses++; // increment on each use
+
+        if (uses >= MAX_USES) {
+            // fully used → return empty glass bottle
+            return new ItemStack(Items.glass_bottle);
+        }
+
+        tag.setInteger("uses", uses);
+        return copy;
+    }
+
+    @Override
+    public boolean doesContainerItemLeaveCraftingGrid(ItemStack stack) {
+        return false; // keep partially used bottle in grid
+    }
+
+    // ---------------- NBT Utilities ----------------
+
     public static NBTTagCompound getTag(ItemStack stack) {
         if (!stack.hasTagCompound()) {
             NBTTagCompound tag = new NBTTagCompound();
-            tag.setInteger("uses", MAX_USES);
+            tag.setInteger("uses", 0); // start at 0, counts up
             stack.setTagCompound(tag);
         }
         return stack.getTagCompound();
     }
 
-    // Reduce uses by 1
-    public static void consumeUse(ItemStack stack, EntityPlayer player) {
-        NBTTagCompound tag = getTag(stack);
-        int uses = tag.getInteger("uses");
-
-        if (uses > 1) {
-            tag.setInteger("uses", uses - 1);
-            return;
-        }
-
-        // No uses left – replace with empty bottle
-        if (!player.worldObj.isRemote) {
-
-            // Remove ink bottle
-            stack.stackSize = 0;
-            // Try add empty bottle to player inventory
-            ItemStack empty = new ItemStack(Items.glass_bottle);
-            if (!player.inventory.addItemStackToInventory(empty)) {
-                // Inventory full → drop it
-                player.dropPlayerItemWithRandomChoice(empty, false);
-            }
-        }
-    }
-
-    @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (!world.isRemote) {
-            int uses = getUses(stack);
-            uses--;
-
-            if (uses <= 0) {
-                // Return empty bottle
-                return new ItemStack(net.minecraft.init.Items.glass_bottle);
-            }
-
-            setUses(stack, uses);
-        }
-
-        return stack;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, java.util.List list, boolean adv) {
-        int uses = getUses(stack);
-        list.add(I18n.format("Uses: %s / %s", uses, MAX_USES));
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
-        for (int i = 1; i < COLOR_NAMES.length; i++) {
-            list.add(new ItemStack(item, 1, i));
-        }
-    }
-
-    // ---------- NBT Handling ----------
-
     public static int getUses(ItemStack stack) {
-        if (!stack.hasTagCompound()) return MAX_USES;
+        if (!stack.hasTagCompound()) return 0;
         return stack.getTagCompound().getInteger("uses");
     }
 
@@ -145,9 +117,42 @@ public class ItemInkBottle extends Item {
         stack.getTagCompound().setInteger("uses", uses);
     }
 
-    // Should always start full
+    // ---------------- Right-click use ----------------
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if (!world.isRemote) {
+            int uses = getUses(stack);
+            uses++;
+            if (uses >= MAX_USES) {
+                return new ItemStack(Items.glass_bottle);
+            }
+            setUses(stack, uses);
+        }
+        return stack;
+    }
+
+    // ---------------- Item Info / Creative ----------------
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean adv) {
+        int uses = MAX_USES - getUses(stack);
+        list.add(I18n.format("Uses: %s / %s", uses, MAX_USES));
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void getSubItems(Item item, CreativeTabs tab, List list) {
+        for (int i = 0; i < COLOR_NAMES.length; i++) {
+            ItemStack stack = new ItemStack(item, 1, i);
+            setUses(stack, 0); // ensure starts full
+            list.add(stack);
+        }
+    }
+
     @Override
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
-        setUses(stack, MAX_USES);
+        setUses(stack, 0); // starts empty counter
     }
 }

@@ -24,4 +24,8 @@ public class ItemStamp extends Item {
         return itemStack.copy();
     }
 
+    @Override
+    public boolean doesContainerItemLeaveCraftingGrid(ItemStack stack) {
+        return false;
+    }
 }

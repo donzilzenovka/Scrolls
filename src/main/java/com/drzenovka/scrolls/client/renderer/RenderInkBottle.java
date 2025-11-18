@@ -1,6 +1,8 @@
 package com.drzenovka.scrolls.client.renderer;
 
 import com.drzenovka.scrolls.common.item.ItemInkBottle;
+import com.drzenovka.scrolls.common.item.ItemScroll;
+import com.drzenovka.scrolls.common.util.ColorUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -39,13 +41,14 @@ public class RenderInkBottle implements IItemRenderer {
 
         // Get ink level ratio
         int max = ItemInkBottle.MAX_USES;
-        int left = ItemInkBottle.getUses(stack);
+        int left = max - ItemInkBottle.getUses(stack);
         float ratio = (float) left / max;
 
         if (ratio <= 0f) return; // empty, skip overlay
 
         // Draw overlay using full UVs, but clip the quad vertically
-        drawPartialIconVertical(overlay, 0, 0, 16, 16, ratio);
+        drawPartialIconVertical(overlay, 0, 0, 16, 16, stack);
+        drawIcon(base, 0, 0, 16, 16);
     }
 
     // -------- Draw full icon --------
@@ -55,7 +58,10 @@ public class RenderInkBottle implements IItemRenderer {
         // Enable blending for alpha
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1f, 1f, 1f, 1f); // white with full alpha
+
+
+
+        //GL11.glColor4f(1f, 1f, 1f, 1f); // white with full alpha
 
         t.startDrawingQuads();
         t.addVertexWithUV(x,     y + h, 0, icon.getMinU(), icon.getMaxV());
@@ -70,42 +76,53 @@ public class RenderInkBottle implements IItemRenderer {
 
 
     // -------- Draw partial icon (bottom-to-top filling) --------
-    private void drawPartialIconVertical(IIcon icon, int x, int y, int w, int h, float ratio) {
+    private void drawPartialIconVertical(IIcon icon, int x, int y, int w, int h, ItemStack stack) {
 
-        // Enable blending for alpha
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        
-        GL11.glColor4f(1f, 1f, 1f, 1f); // white with full alpha
 
-        // Texture UV coordinates
+        int dyeMeta = stack.getItemDamage();
+        float r = ColorUtils.GL11_COLOR_VALUES[dyeMeta][0];
+        float g = ColorUtils.GL11_COLOR_VALUES[dyeMeta][1];
+        float b = ColorUtils.GL11_COLOR_VALUES[dyeMeta][2];
+        GL11.glColor4f(r, g, b, 1f);
+
         float uMin = icon.getMinU();
         float uMax = icon.getMaxU();
         float vMin = icon.getMinV();
         float vMax = icon.getMaxV();
 
-        // How tall the visible area is
-        int drawHeight = (int) (h * ratio);
+        int maxUses = ItemInkBottle.MAX_USES;   // 8
+        int leftUses = maxUses - ItemInkBottle.getUses(stack);
 
-        // vCut marks the UV coordinate for the LOWER boundary of the visible area.
-        // Because v increases downward, we interpolate from MAX V upward.
-        float vCut = vMax - (vMax - vMin) * ratio;
+        // Your visual spec:
+        int startPixels = 10;  // full
+        int minPixels   = 2;   // last visible sliver
 
-        // y-position of the visible area (shifted upward by how tall the filled area is)
+        // How many uses consumed
+        int used = maxUses - leftUses;
+
+        // Start at 10px → decrease by 1px per use
+        int drawHeight = startPixels - used;
+
+        // Clamp so the last 2px always show
+        if (drawHeight < minPixels) drawHeight = minPixels;
+
         int yStart = y + (h - drawHeight);
+
+        float interp = (float) drawHeight / (float) h;
+        float vCut = vMax - (vMax - vMin) * interp;
 
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
-
-        // Draw only the lower portion: (bottom up)
         t.addVertexWithUV(x,       yStart + drawHeight, 0, uMin, vMax);
         t.addVertexWithUV(x + w,   yStart + drawHeight, 0, uMax, vMax);
         t.addVertexWithUV(x + w,   yStart,              0, uMax, vCut);
         t.addVertexWithUV(x,       yStart,              0, uMin, vCut);
-
         t.draw();
 
         GL11.glColor4f(1f, 1f, 1f, 1f);
     }
+
 
 }

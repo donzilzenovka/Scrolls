@@ -24,29 +24,15 @@ public class ModRecipes {
         new ItemStack(Items.potato),
         new ItemStack(Items.stick));
 
+        // Ink Bottles
+        for(int i = 1; i<DYE_NAME_LIST.length; i++) {
+            GameRegistry.addRecipe(new ShapelessOreRecipe(
+                new ItemStack(ModItems.inkBottle, 1, i), new ItemStack(Items.potionitem, 1, 0), DYE_NAME_LIST[i]));
+        }
 
 
         // StampedScrolls
         GameRegistry.addRecipe(new RecipeStampScroll());
         GameRegistry.addRecipe(new RecipeColoredScroll());
-        addInkBottleRecipes();
-    }
-
-    public static void addInkBottleRecipes() {
-
-        ItemStack waterBottle = new ItemStack(Items.potionitem, 1, 0);
-
-        // 0–15 vanilla dye colours (reverse order as 1.7.10 uses)
-        for (int meta = 0; meta < 16; meta++) {
-            String oreName = "dye" + ColorUtils.COLOR_NAMES[meta];  // defined below
-
-            if (OreDictionary.doesOreNameExist(oreName)) {
-                GameRegistry.addRecipe(new ShapelessOreRecipe(
-                    new ItemStack(ModItems.inkBottle, 1, meta),
-                    waterBottle,
-                    oreName
-                ));
-            }
-        }
     }
 }
