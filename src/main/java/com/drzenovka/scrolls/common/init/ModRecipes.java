@@ -6,6 +6,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import static com.drzenovka.scrolls.common.util.ColorUtils.DYE_NAME_LIST;
@@ -34,5 +35,11 @@ public class ModRecipes {
         // StampedScrolls
         GameRegistry.addRecipe(new RecipeStampScroll());
         GameRegistry.addRecipe(new RecipeColoredScroll());
+
+        RecipeSorter.register("scrolls:recipe_stamp_scroll",
+            RecipeStampScroll.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+
+        RecipeSorter.register("scrolls:recipe_colored_scroll",
+            RecipeColoredScroll.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
     }
 }
