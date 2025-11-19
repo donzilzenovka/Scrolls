@@ -1,4 +1,4 @@
-package com.drzenovka.scrolls.client.renderer;
+package com.drzenovka.scrolls.client.renderer.block;
 
 import com.drzenovka.scrolls.client.core.ClientProxy;
 import com.drzenovka.scrolls.common.tileentity.TileEntityInkCauldron;
@@ -32,12 +32,7 @@ public class RenderInkCauldron extends TileEntitySpecialRenderer {
         float fillHeight = 0.5f + (level * cauldronConstant) - cauldronConstant;
 
         mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-        //IIcon waterIcon = Blocks.water.getIcon(1, 0); // top face of water
 
-        // Assuming your custom icon is part of the standard Block/Item texture sheet
-        //mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-
-        // Change the icon reference to your custom, uncolored icon
         IIcon icon = ClientProxy.ClientIconHelper.customInkCauldronFluidIcon; // Replace with your actual static reference
 
         // Check for null just in case of an error
@@ -59,10 +54,10 @@ public class RenderInkCauldron extends TileEntitySpecialRenderer {
         GL11.glShadeModel(GL11.GL_FLAT);
 
         GL11.glDisable(GL11.GL_TEXTURE_2D); // Disable texture 2D to set the bright light map
-        GL11.glEnable(GL11.GL_BLEND); // Ensure blending is on if you fixed that previously
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);// for transparency
+        //GL11.glEnable(GL11.GL_BLEND); // Ensure blending is on if you fixed that previously
+        //GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);// for transparency
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-        net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
+        //net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 
@@ -88,7 +83,7 @@ public class RenderInkCauldron extends TileEntitySpecialRenderer {
 
         t.draw();
 
-        GL11.glDisable(GL11.GL_BLEND); // for transparency
+        //GL11.glDisable(GL11.GL_BLEND); // for transparency
         GL11.glPopAttrib();
 
         // 6. Re-enable lighting and smooth shading for subsequent renders

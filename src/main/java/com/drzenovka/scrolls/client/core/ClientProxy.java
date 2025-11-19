@@ -1,7 +1,7 @@
 package com.drzenovka.scrolls.client.core;
 
 import com.drzenovka.scrolls.client.renderer.item.RenderInkBottle;
-import com.drzenovka.scrolls.client.renderer.RenderInkCauldron;
+import com.drzenovka.scrolls.client.renderer.block.RenderInkCauldron;
 import com.drzenovka.scrolls.client.renderer.entity.RenderHangingScroll;
 import com.drzenovka.scrolls.common.core.CommonProxy;
 import com.drzenovka.scrolls.common.entity.EntityHangingScroll;

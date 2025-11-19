@@ -121,6 +121,28 @@ public class BlockInkCauldron extends BlockCauldron {
             }
             return true;
         }
+        // ---------- White Paper -----
+        if (held.getItem() == Items.paper) {
+            if (!inkCauldron.isWater() && inkCauldron.getLevel() > 0){
+                if (!world.isRemote) {
+                    int dyeMeta = inkCauldron.getColorMeta();
+                    inkCauldron.setLevel(inkCauldron.getLevel() - 1);
+                    ItemStack result = new ItemStack(ModItems.paperColored, 1, dyeMeta);
+                    held.stackSize--;
+                    if (held.stackSize <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+
+                    if (!player.inventory.addItemStackToInventory(result)) {
+                        player.dropPlayerItemWithRandomChoice(result, false);
+                    }
+                    player.openContainer.detectAndSendChanges();
+
+                    inkCauldron.markDirty();
+                    world.markBlockForUpdate(x, y, z);
+                }
+                return true;
+            }
+        }
 
         // ---------- Add dye ----------
         if (Utils.isOreDictItem(held, ModOreDict.DYE)) {
