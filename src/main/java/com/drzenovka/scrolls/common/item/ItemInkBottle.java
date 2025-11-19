@@ -1,11 +1,16 @@
 package com.drzenovka.scrolls.common.item;
 
 import com.drzenovka.scrolls.common.util.ColorUtils;
+import com.drzenovka.scrolls.common.util.DyeColorMap;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -118,7 +123,7 @@ public class ItemInkBottle extends Item {
     }
 
     // ---------------- Right-click use ----------------
-
+    /*
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (!world.isRemote) {
@@ -131,6 +136,46 @@ public class ItemInkBottle extends Item {
         }
         return stack;
     }
+
+
+     */
+
+    @Override
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target) {
+        if (target instanceof EntitySheep) {
+            EntitySheep sheep = (EntitySheep) target;
+            int dyeColorID = DyeColorMap.getColorForStack(stack);
+
+            // Check on the SERVER only
+            if (!sheep.worldObj.isRemote && !sheep.getSheared() && sheep.getFleeceColor() != dyeColorID) {
+                if (player.worldObj.isRemote) {
+                    player.swingItem();
+                }
+
+                // Dye it
+                sheep.setFleeceColor(dyeColorID);
+
+                // Consume or update the bottle
+                int uses = getUses(stack);
+                uses++;
+                if (uses >= MAX_USES) {
+                    // Replace with glass bottle
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem,
+                        new ItemStack(Items.glass_bottle));
+                    return true;
+                } else {
+                    setUses(stack, uses);
+                }
+
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 
     // ---------------- Item Info / Creative ----------------
 
