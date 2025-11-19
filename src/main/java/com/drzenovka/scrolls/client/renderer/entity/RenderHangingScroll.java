@@ -1,6 +1,7 @@
 package com.drzenovka.scrolls.client.renderer.entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -85,9 +86,11 @@ public class RenderHangingScroll extends Render {
         GL11.glRotatef(180f, 0, 1, 0);
         GL11.glScalef(0.005f, -0.005f, 0.005f);
 
-        List<String> wrappedLines = new ArrayList<>();
+        List<String> lines = new ArrayList<>();
         for (String line : text.split("\n")) {
-            wrappedLines.addAll(java.util.Arrays.asList(ScrollTextFormatter.wrapText(fr, line)));
+            String[] parts = ScrollTextFormatter.wrapText(fr, line);
+            if (parts.length == 0) lines.add("");
+            else lines.addAll(Arrays.asList(parts));
         }
 
         final int LEFT_MARGIN = -32;
@@ -98,9 +101,8 @@ public class RenderHangingScroll extends Render {
             ColorUtils.GL11_COLOR_VALUES[inkColor][1],
             ColorUtils.GL11_COLOR_VALUES[inkColor][2]);
 
-        for (int i = 0; i < wrappedLines.size(); i++) {
-            String line = wrappedLines.get(i);
-            fr.drawString(line, LEFT_MARGIN, TOP_MARGIN + i * LINE_SPACING, color);
+        for (int i = 0; i < lines.size(); i++) {
+            fr.drawString(lines.get(i), LEFT_MARGIN, TOP_MARGIN + i * LINE_SPACING, color);
         }
 
         GL11.glPopMatrix();

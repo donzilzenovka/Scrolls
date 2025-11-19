@@ -209,6 +209,7 @@ public class EntityHangingScroll extends EntityItemFrame {
         }
 
         tag.setInteger(ItemScroll.PAPER_COLOR, paperColor);
+        tag.setInteger(ItemScroll.INK_COLOR, inkColor);
 
         drop.setTagCompound(tag);
         this.entityDropItem(drop, 0.0F);
