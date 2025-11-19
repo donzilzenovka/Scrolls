@@ -36,6 +36,7 @@ public final class ModOreDict {
     public static final String PARCHMENT      = "parchment";
     public static final String QUILL          = "quill";
     public static final String WAX            = "wax";
+    public static final String DYE            = "dye";
 
     public static void init() {
 
@@ -110,6 +111,10 @@ public final class ModOreDict {
 
         for (String dye : vanillaDyes) {
             registerAllOres(INK, dye);
+        }
+
+        for (String dye : vanillaDyes) {
+            registerAllOres(DYE, dye);
         }
     }
 

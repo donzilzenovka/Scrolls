@@ -1,11 +1,14 @@
 package com.drzenovka.scrolls.common.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityInkCauldron extends TileEntity {
 
-    private int level = 3; // 1-3 like vanilla
+    private int level = 0; // 1-3 like vanilla
     private int colorMeta = -1; // -1 = water, 0-15 = dye color
 
     public int getLevel() {
@@ -34,6 +37,27 @@ public class TileEntityInkCauldron extends TileEntity {
     }
 
     @Override
+    public Packet getDescriptionPacket() {
+        NBTTagCompound tag = new NBTTagCompound();
+        this.writeToNBT(tag);
+        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tag);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+        this.readFromNBT(pkt.func_148857_g());
+
+        if (this.worldObj != null) {
+            this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+            this.worldObj.markBlockRangeForRenderUpdate(
+                this.xCoord, this.yCoord, this.zCoord,
+                this.xCoord, this.yCoord, this.zCoord
+            );
+        }
+    }
+
+
+    @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.level = nbt.getInteger("level");
@@ -52,5 +76,14 @@ public class TileEntityInkCauldron extends TileEntity {
         if (this.level > 3) this.level = 3;  // clamp to max cauldron level
         this.markDirty();
     }
+
+    public void setWater() {
+        this.colorMeta = -1;
+    }
+
+    public void clearInk() {
+        this.colorMeta = -1;
+    }
+
 
 }

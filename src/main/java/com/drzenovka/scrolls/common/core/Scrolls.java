@@ -1,7 +1,9 @@
 package com.drzenovka.scrolls.common.core;
 
+import com.drzenovka.scrolls.common.handler.ClientEventHandler;
 import com.drzenovka.scrolls.common.tileentity.TileEntityInkCauldron;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,6 +50,9 @@ public class Scrolls {
         FMLCommonHandler.instance()
             .bus()
             .register(new ConfigHandler());
+
+        FMLCommonHandler.instance().bus().register(new ClientEventHandler());
+        MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
         // ModVersionChecker.registerModToUpdate(MODID, VERSION, EnumChatFormatting.DARK_PURPLE, versionUrl);
 
         NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
