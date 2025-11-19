@@ -1,7 +1,6 @@
-package com.drzenovka.scrolls.client.renderer;
+package com.drzenovka.scrolls.client.renderer.item;
 
 import com.drzenovka.scrolls.common.item.ItemInkBottle;
-import com.drzenovka.scrolls.common.item.ItemScroll;
 import com.drzenovka.scrolls.common.util.ColorUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

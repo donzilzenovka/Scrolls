@@ -1,6 +1,6 @@
 package com.drzenovka.scrolls.client.core;
 
-import com.drzenovka.scrolls.client.renderer.RenderInkBottle;
+import com.drzenovka.scrolls.client.renderer.item.RenderInkBottle;
 import com.drzenovka.scrolls.client.renderer.RenderInkCauldron;
 import com.drzenovka.scrolls.client.renderer.entity.RenderHangingScroll;
 import com.drzenovka.scrolls.common.core.CommonProxy;
@@ -30,7 +30,6 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityHangingScroll.class, new RenderHangingScroll());
         MinecraftForgeClient.registerItemRenderer(ModItems.inkBottle, new RenderInkBottle());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInkCauldron.class, new RenderInkCauldron());
-
 
 
     }
