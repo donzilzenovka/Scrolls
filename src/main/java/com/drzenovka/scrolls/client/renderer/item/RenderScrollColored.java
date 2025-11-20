@@ -23,7 +23,10 @@ public class RenderScrollColored implements IItemRenderer {
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
         // Only custom-render in inventory / GUI
-        return type == ItemRenderType.INVENTORY || type == ItemRenderType.FIRST_PERSON_MAP;
+        return  type == ItemRenderType.INVENTORY ||
+                type == ItemRenderType.FIRST_PERSON_MAP ||
+                type == ItemRenderType.EQUIPPED ||        // Held in third-person view
+                type == ItemRenderType.EQUIPPED_FIRST_PERSON;
     }
 
     @Override
@@ -33,6 +36,34 @@ public class RenderScrollColored implements IItemRenderer {
 
     @Override
     public void renderItem(ItemRenderType type, ItemStack stack, Object... data) {
+
+        if (type == ItemRenderType.EQUIPPED ) {
+            GL11.glPushMatrix();
+
+            // --- Position ---
+            GL11.glTranslatef(0.5F, 0.4F, 0.5F);  // move to hand area
+
+            // --- Rotate to face camera properly ---
+            GL11.glRotatef(180F, 0F, 0F, 1F);     // flip over Y-down fix
+            GL11.glRotatef(90F, 0F, 1F, 0F);      // face outward
+
+            // --- Scale to icon size ---
+            float scale = 0.0625F; // 1/16th: convert pixels → world units
+            GL11.glScalef(scale, scale, scale);
+            drawIconThickness();
+        }
+        if (type == ItemRenderType.EQUIPPED_FIRST_PERSON)
+        {
+            GL11.glPushMatrix();
+            GL11.glTranslatef(1.1F, 1.1F, 0F);
+            GL11.glRotatef(  180F, 0F, 0F, 1F);
+
+            // --- Scale to icon size ---
+            float scale = 0.0625F; // 1/16th: convert pixels → world units
+            GL11.glScalef(scale, scale, scale);
+
+
+        }
 
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
@@ -47,6 +78,10 @@ public class RenderScrollColored implements IItemRenderer {
         }
         drawIcon(base, paperColor, 0, 0, 16, 16);
         drawIcon(overlay, inkColor, 0, 0, 16, 16);
+
+        if (type == ItemRenderType.EQUIPPED_FIRST_PERSON || type == ItemRenderType.EQUIPPED) {
+            GL11.glPopMatrix();
+        }
     }
 
     // -------- Draw full icon --------
@@ -124,5 +159,56 @@ public class RenderScrollColored implements IItemRenderer {
         GL11.glColor4f(1f, 1f, 1f, 1f);
     }
 
+    // In RenderScrollColored.java
 
+    private void drawIconThickness() {
+        Tessellator t = Tessellator.instance;
+        float z = 0.001F; // Render slightly in front of the main item (Z=0)
+        float p = 1.0F; // 1 pixel width in world units (0.0625)
+
+        // Disable textures to draw solid colors
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+
+        // --- 1. Dark Shadow (Bottom and Right Edges) ---
+        GL11.glColor4f(0.2F, 0.2F, 0.2F, 1.0F); // Dark Gray/Black
+
+        // Bottom Edge (from x=0 to x=1, y=0 to y=p)
+        t.startDrawingQuads();
+        t.addVertex(0.0, 0.0, z);
+        t.addVertex(1.0, 0.0, z);
+        t.addVertex(1.0, p, z);
+        t.addVertex(0.0, p, z);
+        t.draw();
+
+        // Right Edge (from x=1-p to x=1, y=p to y=1)
+        t.startDrawingQuads();
+        t.addVertex(1.0 - p, p, z);
+        t.addVertex(1.0, p, z);
+        t.addVertex(1.0, 1.0, z);
+        t.addVertex(1.0 - p, 1.0, z);
+        t.draw();
+
+        // --- 2. Light Highlight (Top and Left Edges) ---
+        GL11.glColor4f(0.8F, 0.8F, 0.8F, 1.0F); // Light Gray/White
+
+        // Top Edge (from x=0 to x=1-p, y=1-p to y=1)
+        t.startDrawingQuads();
+        t.addVertex(0.0, 1.0 - p, z);
+        t.addVertex(1.0 - p, 1.0 - p, z);
+        t.addVertex(1.0 - p, 1.0, z);
+        t.addVertex(0.0, 1.0, z);
+        t.draw();
+
+        // Left Edge (from x=0 to x=p, y=p to y=1-p)
+        t.startDrawingQuads();
+        t.addVertex(0.0, p, z);
+        t.addVertex(p, p, z);
+        t.addVertex(p, 1.0 - p, z);
+        t.addVertex(0.0, 1.0 - p, z);
+        t.draw();
+
+        // Re-enable textures and reset color for the main item rendering
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glColor4f(1f, 1f, 1f, 1f);
+    }
 }

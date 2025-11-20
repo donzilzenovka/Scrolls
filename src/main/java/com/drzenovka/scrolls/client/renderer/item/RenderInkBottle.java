@@ -18,7 +18,10 @@ public class RenderInkBottle implements IItemRenderer {
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
         // Only custom-render in inventory / GUI
-        return type == ItemRenderType.INVENTORY || type == ItemRenderType.FIRST_PERSON_MAP;
+        return  type == ItemRenderType.INVENTORY ||
+                type == ItemRenderType.FIRST_PERSON_MAP ||
+                type == ItemRenderType.EQUIPPED ||        // Held in third-person view
+                type == ItemRenderType.EQUIPPED_FIRST_PERSON;
     }
 
     @Override
@@ -28,6 +31,20 @@ public class RenderInkBottle implements IItemRenderer {
 
     @Override
     public void renderItem(ItemRenderType type, ItemStack stack, Object... data) {
+        // --- NEW: Apply necessary GL transformations based on render type ---
+        if (type == ItemRenderType.EQUIPPED_FIRST_PERSON || type == ItemRenderType.EQUIPPED) {
+            // Move to the item's standard held position (usually a good starting point)
+            // Note: These values are typical defaults, you may need to adjust them for a scroll.
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0.5F, 0.5F, 0.5F); // Center the rendering at 0.5, 0.5, 0.5
+
+            if (type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
+                // Apply first-person specific transformations if you want it closer/rotated differently
+                // (Often necessary if you want a custom 3D look, but maybe not for a 2D icon)
+            }
+            // Scaling to match standard icon size in the world (adjust scale as needed)
+            GL11.glScalef(1.0F, 1.0F, 1.0F);
+        }
 
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
@@ -48,6 +65,10 @@ public class RenderInkBottle implements IItemRenderer {
         // Draw overlay using full UVs, but clip the quad vertically
         drawPartialIconVertical(overlay, 0, 0, 16, 16, stack);
         drawIcon(base, 0, 0, 16, 16);
+
+        if (type == ItemRenderType.EQUIPPED_FIRST_PERSON || type == ItemRenderType.EQUIPPED) {
+            GL11.glPopMatrix();
+        }
     }
 
     // -------- Draw full icon --------

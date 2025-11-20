@@ -5,7 +5,6 @@ import net.minecraft.item.Item;
 
 import com.drzenovka.scrolls.common.item.ItemPaperColored;
 import com.drzenovka.scrolls.common.item.ItemScroll;
-import com.drzenovka.scrolls.common.item.ItemScrollColored;
 import com.drzenovka.scrolls.common.item.ItemStamp;
 import com.drzenovka.scrolls.common.item.ItemWax;
 
@@ -20,7 +19,7 @@ public class ModItems {
     public static Item inkBottle;
 
     public static void init() {
-        scrollColored = new ItemScrollColored();
+        scrollColored = new ItemScroll();
         wax = new ItemWax();
         paperColored = new ItemPaperColored();
         stamp = new ItemStamp();

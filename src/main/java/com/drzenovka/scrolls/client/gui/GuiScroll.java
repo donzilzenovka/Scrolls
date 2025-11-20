@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.drzenovka.scrolls.common.core.Scrolls;
 import com.drzenovka.scrolls.common.item.ItemScroll;
-import com.drzenovka.scrolls.common.item.ItemScrollColored;
+
 import com.drzenovka.scrolls.common.util.ColorUtils;
 import com.drzenovka.scrolls.network.PacketSaveScroll;
 
@@ -183,7 +183,7 @@ public class GuiScroll extends GuiScreen {
     }
 
     private void drawStamp(int x, int y) {
-        if (!(stack.getItem() instanceof ItemScrollColored)) return;
+        if (!(stack.getItem() instanceof ItemScroll)) return;
 
         NBTTagCompound tag = stack.getTagCompound();
         if (tag == null) return;
