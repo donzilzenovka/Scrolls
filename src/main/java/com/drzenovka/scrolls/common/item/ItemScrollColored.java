@@ -22,7 +22,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemScrollColored extends ItemScroll {
 
-    private IIcon[] icons;
+    private IIcon baseIcon;    // For the uncolored paper scroll texture
+    private IIcon overlayIcon; // For the uncolored ink/stamps overlay texture
 
     public ItemScrollColored() {
         this.setUnlocalizedName("scroll_colored")
@@ -34,15 +35,28 @@ public class ItemScrollColored extends ItemScroll {
 
     @Override
     public void registerIcons(IIconRegister reg) {
-        icons = new IIcon[COLOR_NAMES.length];
-        for (int i = 0; i < COLOR_NAMES.length; i++) {
-            icons[i] = reg.registerIcon("scrolls:colored_scroll_" + COLOR_NAMES[i]);
-        }
+        // 1. Register the base scroll icon (Paper texture)
+        baseIcon = reg.registerIcon("scrolls:scroll_base");
+
+        // 2. Register the overlay scroll icon (Ink/Stamp texture)
+        overlayIcon = reg.registerIcon("scrolls:scroll_overlay");
+
+        // Remove the loop that registered all the colored icons.
     }
 
     @Override
-    public IIcon getIconFromDamage(int meta) {
-        return icons[Math.min(meta, icons.length - 1)];
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(ItemStack stack, int pass) {
+        if (pass == 0) {
+            // Pass 0: Return the base scroll icon
+            return this.baseIcon;
+        } else if (pass == 1) {
+            // Pass 1: Return the ink/stamp overlay icon
+            return this.overlayIcon;
+        }
+
+        // Default fallback to the base icon if an unexpected pass is requested
+        return this.baseIcon;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.drzenovka.scrolls.client.renderer.item;
 
 import com.drzenovka.scrolls.common.item.ItemInkBottle;
+import com.drzenovka.scrolls.common.item.ItemScroll;
 import com.drzenovka.scrolls.common.util.ColorUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -8,12 +9,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderInkBottle implements IItemRenderer {
+public class RenderScrollColored implements IItemRenderer {
+
+    private int paperColor = 0;
+    private int inkColor = 0;
 
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
@@ -35,23 +40,17 @@ public class RenderInkBottle implements IItemRenderer {
         IIcon base = stack.getItem().getIcon(stack, 0);
         IIcon overlay = stack.getItem().getIcon(stack, 1);
 
-        // Draw base bottle fully
-        //drawIcon(base, 0, 0, 16, 16);
-
-        // Get ink level ratio
-        int max = ItemInkBottle.MAX_USES;
-        int left = max - ItemInkBottle.getUses(stack);
-        float ratio = (float) left / max;
-
-        if (ratio <= 0f) return; // empty, skip overlay
-
-        // Draw overlay using full UVs, but clip the quad vertically
-        drawPartialIconVertical(overlay, 0, 0, 16, 16, stack);
-        drawIcon(base, 0, 0, 16, 16);
+        NBTTagCompound tag = stack.getTagCompound();
+        if (!(tag == null)) {
+            paperColor = tag.getInteger(ItemScroll.PAPER_COLOR);
+            inkColor = tag.getInteger(ItemScroll.INK_COLOR);
+        }
+        drawIcon(base, paperColor, 0, 0, 16, 16);
+        drawIcon(overlay, inkColor, 0, 0, 16, 16);
     }
 
     // -------- Draw full icon --------
-    private void drawIcon(IIcon icon, int x, int y, int w, int h) {
+    private void drawIcon(IIcon icon, int dyeMeta, int x, int y, int w, int h) {
         Tessellator t = Tessellator.instance;
 
         // Enable blending for alpha
@@ -59,8 +58,10 @@ public class RenderInkBottle implements IItemRenderer {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 
-
-        //GL11.glColor4f(1f, 1f, 1f, 1f); // white with full alpha
+        float r = ColorUtils.GL11_COLOR_VALUES[dyeMeta][0];
+        float g = ColorUtils.GL11_COLOR_VALUES[dyeMeta][1];
+        float b = ColorUtils.GL11_COLOR_VALUES[dyeMeta][2];
+        GL11.glColor4f(r, g, b, 1f);
 
         t.startDrawingQuads();
         t.addVertexWithUV(x,     y + h, 0, icon.getMinU(), icon.getMaxV());

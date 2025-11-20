@@ -1,12 +1,14 @@
 package com.drzenovka.scrolls.common.item;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import com.drzenovka.scrolls.client.gui.GuiScroll;
@@ -22,12 +24,44 @@ public class ItemScroll extends Item {
     public static final String PAPER_COLOR = "paperColor";
     public static final String INK_COLOR = "inkColor";
 
+    private IIcon scrollIcon;
+    private IIcon overlayIcon;
+
     public ItemScroll() {
         this.setUnlocalizedName("scroll")
             .setTextureName("scrolls:scroll")
             .setMaxStackSize(1)
             .setCreativeTab(net.minecraft.creativetab.CreativeTabs.tabMisc);
     }
+
+    @Override
+    public boolean requiresMultipleRenderPasses() {
+        return true;
+    }
+
+    @Override
+    public void registerIcons(IIconRegister reg){
+        this.scrollIcon = reg.registerIcon("scrolls:scroll_base");
+        this.overlayIcon = reg.registerIcon("scrolls:scroll_overlay");
+    }
+
+    @Override
+    public IIcon getIconFromDamageForRenderPass(int meta, int pass) {
+        return pass == 0 ? scrollIcon : overlayIcon;
+    }
+
+    /*
+    @Override
+    public int getColorFromItemStack(ItemStack stack, int pass) {
+        if (pass == 0) return 0xFFFFFF; // base bottle not tinted
+
+        return ColorUtils.rgbToHex(
+            ColorUtils.GL11_COLOR_VALUES[stack.getItemDamage()][0],
+            ColorUtils.GL11_COLOR_VALUES[stack.getItemDamage()][1],
+            ColorUtils.GL11_COLOR_VALUES[stack.getItemDamage()][2]);
+    }
+
+     */
 
     /** Initialize NBT for a new scroll */
     protected void initNBT(ItemStack stack) {

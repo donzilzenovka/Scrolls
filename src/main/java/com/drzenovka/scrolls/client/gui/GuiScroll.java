@@ -125,7 +125,7 @@ public class GuiScroll extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
+        //drawDefaultBackground();
 
         mc.getTextureManager()
             .bindTexture(BG_TEXTURE);
