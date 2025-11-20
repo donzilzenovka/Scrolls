@@ -1,6 +1,7 @@
 package com.drzenovka.scrolls.common.item;
 
-import net.minecraft.creativetab.CreativeTabs;
+import static com.drzenovka.scrolls.common.core.Scrolls.scrollsTab;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -11,7 +12,7 @@ public class ItemStamp extends Item {
             .setTextureName("scrolls:stamp")
             .setMaxStackSize(1)
             .setContainerItem(this)
-            .setCreativeTab(CreativeTabs.tabMisc);
+            .setCreativeTab(scrollsTab);
     }
 
     @Override

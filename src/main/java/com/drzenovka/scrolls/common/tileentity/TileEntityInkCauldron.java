@@ -50,12 +50,14 @@ public class TileEntityInkCauldron extends TileEntity {
         if (this.worldObj != null) {
             this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
             this.worldObj.markBlockRangeForRenderUpdate(
-                this.xCoord, this.yCoord, this.zCoord,
-                this.xCoord, this.yCoord, this.zCoord
-            );
+                this.xCoord,
+                this.yCoord,
+                this.zCoord,
+                this.xCoord,
+                this.yCoord,
+                this.zCoord);
         }
     }
-
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
@@ -73,7 +75,7 @@ public class TileEntityInkCauldron extends TileEntity {
 
     public void incrementLevel(int i) {
         this.level += i;
-        if (this.level > 3) this.level = 3;  // clamp to max cauldron level
+        if (this.level > 3) this.level = 3; // clamp to max cauldron level
         this.markDirty();
     }
 
@@ -84,6 +86,5 @@ public class TileEntityInkCauldron extends TileEntity {
     public void clearInk() {
         this.colorMeta = -1;
     }
-
 
 }

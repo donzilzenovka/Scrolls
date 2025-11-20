@@ -1,18 +1,18 @@
 package com.drzenovka.scrolls.common.core;
 
-import com.drzenovka.scrolls.common.handler.ClientEventHandler;
-import com.drzenovka.scrolls.common.tileentity.TileEntityInkCauldron;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.MinecraftForge;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.drzenovka.scrolls.common.handler.ClientEventHandler;
 import com.drzenovka.scrolls.common.handler.ConfigHandler;
 import com.drzenovka.scrolls.common.init.ModBlocks;
 import com.drzenovka.scrolls.common.init.ModEntities;
 import com.drzenovka.scrolls.common.init.ModItems;
 import com.drzenovka.scrolls.common.init.ModOreDict;
 import com.drzenovka.scrolls.common.init.ModRecipes;
+import com.drzenovka.scrolls.common.tileentity.TileEntityInkCauldron;
 import com.drzenovka.scrolls.network.PacketSaveScroll;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -22,6 +22,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = Scrolls.MODID, name = Scrolls.NAME, version = Scrolls.VERSION)
@@ -43,6 +44,9 @@ public class Scrolls {
         serverSide = "com.drzenovka.scrolls.common.core.CommonProxy")
     public static CommonProxy proxy;
 
+    // Creative Tab
+    public static final ScrollsTab scrollsTab = new ScrollsTab();
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOG.info("Pre-initializing Scrolls mod...");
@@ -51,7 +55,9 @@ public class Scrolls {
             .bus()
             .register(new ConfigHandler());
 
-        FMLCommonHandler.instance().bus().register(new ClientEventHandler());
+        FMLCommonHandler.instance()
+            .bus()
+            .register(new ClientEventHandler());
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
         // ModVersionChecker.registerModToUpdate(MODID, VERSION, EnumChatFormatting.DARK_PURPLE, versionUrl);
 

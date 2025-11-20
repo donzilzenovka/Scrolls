@@ -1,14 +1,15 @@
 package com.drzenovka.scrolls.common.init;
 
-import com.drzenovka.scrolls.common.util.DyeColorMap;
-import com.drzenovka.scrolls.common.util.Utils;
+import static com.drzenovka.scrolls.common.init.ModOreDict.INK;
+
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import static com.drzenovka.scrolls.common.init.ModOreDict.INK;
+import com.drzenovka.scrolls.common.util.DyeColorMap;
+import com.drzenovka.scrolls.common.util.Utils;
 
 public class RecipeStampScroll implements IRecipe {
 
@@ -22,7 +23,7 @@ public class RecipeStampScroll implements IRecipe {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack == null) continue;
 
-            if (stack.getItem() == ModItems.scrollColored) {
+            if (stack.getItem() == ModItems.scroll) {
                 if (foundScroll) return false; // only one allowed
                 foundScroll = true;
 
@@ -53,7 +54,7 @@ public class RecipeStampScroll implements IRecipe {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack == null) continue;
 
-            if (stack.getItem() == ModItems.scrollColored) {
+            if (stack.getItem() == ModItems.scroll) {
                 scroll = stack;
             } else if (Utils.isOreDictItem(stack, INK)) {
                 dyeMeta = DyeColorMap.getColorForStack(stack);
@@ -88,7 +89,7 @@ public class RecipeStampScroll implements IRecipe {
 
     @Override
     public ItemStack getRecipeOutput() {
-        return new ItemStack(ModItems.scrollColored);
+        return new ItemStack(ModItems.scroll);
     }
 
 }

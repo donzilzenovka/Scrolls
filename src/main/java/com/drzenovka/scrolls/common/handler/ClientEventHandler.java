@@ -1,10 +1,11 @@
 package com.drzenovka.scrolls.common.handler;
 
-import com.drzenovka.scrolls.client.core.ClientProxy;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
+import net.minecraftforge.client.event.TextureStitchEvent;
+
+import com.drzenovka.scrolls.client.core.ClientProxy;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ClientEventHandler {
 

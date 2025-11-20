@@ -1,11 +1,10 @@
 package com.drzenovka.scrolls.common.item;
 
-import com.drzenovka.scrolls.common.util.ColorUtils;
-import com.drzenovka.scrolls.common.util.DyeColorMap;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.multiplayer.WorldClient;
+import static com.drzenovka.scrolls.common.core.Scrolls.scrollsTab;
+import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
+
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,13 +18,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-import java.util.List;
+import com.drzenovka.scrolls.common.util.ColorUtils;
+import com.drzenovka.scrolls.common.util.DyeColorMap;
 
-import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemInkBottle extends Item {
 
-    public static final int MAX_USES = 8;   // number of uses before empty
+    public static final int MAX_USES = 8; // number of uses before empty
     private IIcon bottleIcon;
     private IIcon overlayIcon;
 
@@ -33,7 +34,7 @@ public class ItemInkBottle extends Item {
         this.setHasSubtypes(true)
             .setMaxDamage(0)
             .setMaxStackSize(1)
-            .setCreativeTab(CreativeTabs.tabMisc)
+            .setCreativeTab(scrollsTab)
             .setUnlocalizedName("ink_bottle");
     }
 
@@ -43,7 +44,7 @@ public class ItemInkBottle extends Item {
     }
 
     @Override
-    public void registerIcons(IIconRegister reg){
+    public void registerIcons(IIconRegister reg) {
         this.bottleIcon = reg.registerIcon("scrolls:ink_bottle_base");
         this.overlayIcon = reg.registerIcon("scrolls:ink_bottle_overlay");
     }
@@ -114,30 +115,30 @@ public class ItemInkBottle extends Item {
 
     public static int getUses(ItemStack stack) {
         if (!stack.hasTagCompound()) return 0;
-        return stack.getTagCompound().getInteger("uses");
+        return stack.getTagCompound()
+            .getInteger("uses");
     }
 
     public static void setUses(ItemStack stack, int uses) {
         if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setInteger("uses", uses);
+        stack.getTagCompound()
+            .setInteger("uses", uses);
     }
 
     // ---------------- Right-click use ----------------
     /*
-    @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (!world.isRemote) {
-            int uses = getUses(stack);
-            uses++;
-            if (uses >= MAX_USES) {
-                return new ItemStack(Items.glass_bottle);
-            }
-            setUses(stack, uses);
-        }
-        return stack;
-    }
-
-
+     * @Override
+     * public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+     * if (!world.isRemote) {
+     * int uses = getUses(stack);
+     * uses++;
+     * if (uses >= MAX_USES) {
+     * return new ItemStack(Items.glass_bottle);
+     * }
+     * setUses(stack, uses);
+     * }
+     * return stack;
+     * }
      */
 
     @Override
@@ -160,8 +161,8 @@ public class ItemInkBottle extends Item {
                 uses++;
                 if (uses >= MAX_USES) {
                     // Replace with glass bottle
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem,
-                        new ItemStack(Items.glass_bottle));
+                    player.inventory
+                        .setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.glass_bottle));
                     return true;
                 } else {
                     setUses(stack, uses);
@@ -174,8 +175,6 @@ public class ItemInkBottle extends Item {
 
         return false;
     }
-
-
 
     // ---------------- Item Info / Creative ----------------
 

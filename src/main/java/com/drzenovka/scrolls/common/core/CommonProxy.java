@@ -1,12 +1,13 @@
 package com.drzenovka.scrolls.common.core;
 
-import com.drzenovka.scrolls.common.handler.FuelHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
+import com.drzenovka.scrolls.common.handler.FuelHandler;
+
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy implements IGuiHandler {
 

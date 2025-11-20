@@ -1,39 +1,42 @@
 package com.drzenovka.scrolls.client.renderer.block;
 
-import com.drzenovka.scrolls.client.core.ClientProxy;
-import com.drzenovka.scrolls.common.tileentity.TileEntityInkCauldron;
-import com.drzenovka.scrolls.common.util.ColorUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.client.renderer.texture.TextureMap;
+
 import org.lwjgl.opengl.GL11;
+
+import com.drzenovka.scrolls.client.core.ClientProxy;
+import com.drzenovka.scrolls.common.tileentity.TileEntityInkCauldron;
+import com.drzenovka.scrolls.common.util.ColorUtils;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderInkCauldron extends TileEntitySpecialRenderer {
 
     private final Minecraft mc = Minecraft.getMinecraft();
 
-
     private void renderInkCauldron(TileEntityInkCauldron te, double x, double y, double z, float partialTicks) {
 
         int level = te.getLevel();
-        //System.out.println("render level: " + level);
+        // System.out.println("render level: " + level);
         if (level <= 0) return; // empty, nothing to render
 
-        //for setting water height akin to regular cauldron
+        // for setting water height akin to regular cauldron
         float cauldronConstant = 0.1875f; // for setting water height akin to vanilla
         float fillHeight = 0.5f + (level * cauldronConstant) - cauldronConstant;
 
-        mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+        mc.getTextureManager()
+            .bindTexture(TextureMap.locationBlocksTexture);
 
-        IIcon icon = ClientProxy.ClientIconHelper.customInkCauldronFluidIcon; // Replace with your actual static reference
+        IIcon icon = ClientProxy.ClientIconHelper.customInkCauldronFluidIcon; // Replace with your actual static
+                                                                              // reference
 
         // Check for null just in case of an error
         if (icon == null) return;
@@ -54,10 +57,11 @@ public class RenderInkCauldron extends TileEntitySpecialRenderer {
         GL11.glShadeModel(GL11.GL_FLAT);
 
         GL11.glDisable(GL11.GL_TEXTURE_2D); // Disable texture 2D to set the bright light map
-        //GL11.glEnable(GL11.GL_BLEND); // Ensure blending is on if you fixed that previously
-        //GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);// for transparency
+        // GL11.glEnable(GL11.GL_BLEND); // Ensure blending is on if you fixed that previously
+        // GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);// for transparency
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-        //net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
+        // net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F,
+        // 240.0F);
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 
@@ -83,7 +87,7 @@ public class RenderInkCauldron extends TileEntitySpecialRenderer {
 
         t.draw();
 
-        //GL11.glDisable(GL11.GL_BLEND); // for transparency
+        // GL11.glDisable(GL11.GL_BLEND); // for transparency
         GL11.glPopAttrib();
 
         // 6. Re-enable lighting and smooth shading for subsequent renders

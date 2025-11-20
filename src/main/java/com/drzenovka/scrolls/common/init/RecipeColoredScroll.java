@@ -1,22 +1,18 @@
 package com.drzenovka.scrolls.common.init;
 
-import com.drzenovka.scrolls.common.util.DyeColorMap;
-import com.drzenovka.scrolls.common.util.Utils;
-import net.minecraft.init.Items;
+import static com.drzenovka.scrolls.common.init.ModOreDict.INK;
+import static com.drzenovka.scrolls.common.init.ModOreDict.PARCHMENT;
+import static com.drzenovka.scrolls.common.init.ModOreDict.QUILL;
+
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-
 import com.drzenovka.scrolls.common.item.ItemScroll;
-
-import static com.drzenovka.scrolls.common.init.ModOreDict.INK;
-import static com.drzenovka.scrolls.common.init.ModOreDict.PARCHMENT;
-import static com.drzenovka.scrolls.common.init.ModOreDict.QUILL;
-
+import com.drzenovka.scrolls.common.util.DyeColorMap;
+import com.drzenovka.scrolls.common.util.Utils;
 
 public class RecipeColoredScroll implements IRecipe {
 
@@ -66,7 +62,7 @@ public class RecipeColoredScroll implements IRecipe {
         if (paper == null || dyeMeta == -1) return null;
 
         // output will be a scroll, same paper colour
-        ItemStack result = new ItemStack(ModItems.scrollColored, 1, paper.getItemDamage());
+        ItemStack result = new ItemStack(ModItems.scroll, 1, paper.getItemDamage());
 
         int inkColor = dyeMeta;
         System.out.println("dyeMeta:" + dyeMeta);
@@ -93,6 +89,6 @@ public class RecipeColoredScroll implements IRecipe {
     @Override
     public ItemStack getRecipeOutput() {
         // generic preview
-        return new ItemStack(ModItems.scrollColored);
+        return new ItemStack(ModItems.scroll);
     }
 }

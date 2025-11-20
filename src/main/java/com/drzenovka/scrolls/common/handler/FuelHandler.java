@@ -1,10 +1,12 @@
 package com.drzenovka.scrolls.common.handler;
 
-import com.drzenovka.scrolls.common.item.ItemPaperColored;
-import com.drzenovka.scrolls.common.item.ItemScroll;
-import cpw.mods.fml.common.IFuelHandler;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+
+import com.drzenovka.scrolls.common.item.ItemPaperColored;
+import com.drzenovka.scrolls.common.item.ItemScroll;
+
+import cpw.mods.fml.common.IFuelHandler;
 
 public class FuelHandler implements IFuelHandler {
 

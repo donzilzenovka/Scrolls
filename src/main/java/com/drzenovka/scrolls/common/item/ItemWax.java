@@ -1,5 +1,6 @@
 package com.drzenovka.scrolls.common.item;
 
+import static com.drzenovka.scrolls.common.core.Scrolls.scrollsTab;
 import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class ItemWax extends Item {
             .setHasSubtypes(true)
             .setMaxDamage(0)
             .setMaxStackSize(64)
-            .setCreativeTab(CreativeTabs.tabMisc);
+            .setCreativeTab(scrollsTab);
     }
 
     @Override

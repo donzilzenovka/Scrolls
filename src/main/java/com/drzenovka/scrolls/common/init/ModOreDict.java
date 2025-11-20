@@ -2,41 +2,39 @@ package com.drzenovka.scrolls.common.init;
 
 import static com.drzenovka.scrolls.common.util.ColorUtils.COLOR_NAMES;
 
-import net.minecraft.init.Blocks;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 public final class ModOreDict {
+
     private ModOreDict() {};
 
-    public static final String DYE_WHITE      = "dyeWhite";
-    public static final String DYE_ORANGE     = "dyeOrange";
-    public static final String DYE_MAGENTA    = "dyeMagenta";
+    public static final String DYE_WHITE = "dyeWhite";
+    public static final String DYE_ORANGE = "dyeOrange";
+    public static final String DYE_MAGENTA = "dyeMagenta";
     public static final String DYE_LIGHT_BLUE = "dyeLightBlue";
-    public static final String DYE_YELLOW     = "dyeYellow";
-    public static final String DYE_LIME       = "dyeLime";
-    public static final String DYE_PINK       = "dyePink";
-    public static final String DYE_GRAY       = "dyeGray";
+    public static final String DYE_YELLOW = "dyeYellow";
+    public static final String DYE_LIME = "dyeLime";
+    public static final String DYE_PINK = "dyePink";
+    public static final String DYE_GRAY = "dyeGray";
     public static final String DYE_LIGHT_GRAY = "dyeLightGray";
-    public static final String DYE_CYAN       = "dyeCyan";
-    public static final String DYE_PURPLE     = "dyePurple";
-    public static final String DYE_BLUE       = "dyeBlue";
-    public static final String DYE_BROWN      = "dyeBrown";
-    public static final String DYE_GREEN      = "dyeGreen";
-    public static final String DYE_RED        = "dyeRed";
-    public static final String DYE_BLACK      = "dyeBlack";
+    public static final String DYE_CYAN = "dyeCyan";
+    public static final String DYE_PURPLE = "dyePurple";
+    public static final String DYE_BLUE = "dyeBlue";
+    public static final String DYE_BROWN = "dyeBrown";
+    public static final String DYE_GREEN = "dyeGreen";
+    public static final String DYE_RED = "dyeRed";
+    public static final String DYE_BLACK = "dyeBlack";
 
-    public static final String INK            = "ink";
-    public static final String PARCHMENT      = "parchment";
-    public static final String QUILL          = "quill";
-    public static final String WAX            = "wax";
-    public static final String DYE            = "dye";
+    public static final String INK = "ink";
+    public static final String PARCHMENT = "parchment";
+    public static final String QUILL = "quill";
+    public static final String WAX = "wax";
+    public static final String DYE = "dye";
 
     public static void init() {
 
@@ -101,13 +99,8 @@ public final class ModOreDict {
         OreDictionary.registerOre(DYE_WHITE, new ItemStack(Items.dye, 1, 15));
         OreDictionary.registerOre(DYE_WHITE, new ItemStack(ModItems.inkBottle, 1, 0));
 
-
-        String[] vanillaDyes = {
-            DYE_WHITE, DYE_ORANGE, DYE_MAGENTA, DYE_LIGHT_BLUE,
-            DYE_YELLOW, DYE_LIME, DYE_PINK, DYE_GRAY,
-            DYE_LIGHT_GRAY, DYE_CYAN, DYE_PURPLE, DYE_BLUE,
-            DYE_BROWN, DYE_GREEN, DYE_RED, DYE_BLACK
-        };
+        String[] vanillaDyes = { DYE_WHITE, DYE_ORANGE, DYE_MAGENTA, DYE_LIGHT_BLUE, DYE_YELLOW, DYE_LIME, DYE_PINK,
+            DYE_GRAY, DYE_LIGHT_GRAY, DYE_CYAN, DYE_PURPLE, DYE_BLUE, DYE_BROWN, DYE_GREEN, DYE_RED, DYE_BLACK };
 
         for (String dye : vanillaDyes) {
             registerAllOres(INK, dye);

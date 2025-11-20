@@ -1,5 +1,7 @@
 package com.drzenovka.scrolls.common.entity;
 
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.item.EntityItemFrame;
@@ -10,8 +12,6 @@ import net.minecraft.world.World;
 
 import com.drzenovka.scrolls.common.init.ModItems;
 import com.drzenovka.scrolls.common.item.ItemScroll;
-
-import java.util.List;
 
 public class EntityHangingScroll extends EntityItemFrame {
 
@@ -89,15 +89,14 @@ public class EntityHangingScroll extends EntityItemFrame {
 
     @Override
     public boolean onValidSurface() {
-        if (!this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty()) {
+        if (!this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox)
+            .isEmpty()) {
             return false;
         }
 
         // Also check for ANY hanging entities in the same spot
-        List entities = this.worldObj.getEntitiesWithinAABBExcludingEntity(
-            this,
-            this.boundingBox.expand(0.01D, 0.01D, 0.01D)
-        );
+        List entities = this.worldObj
+            .getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.01D, 0.01D, 0.01D));
 
         for (Object o : entities) {
             if (o instanceof EntityHanging) {
@@ -107,7 +106,6 @@ public class EntityHangingScroll extends EntityItemFrame {
 
         return super.onValidSurface();
     }
-
 
     public void syncToWatcher() {
         setMultiString(IDX_NBT_TEXT, scrollText);
@@ -172,13 +170,37 @@ public class EntityHangingScroll extends EntityItemFrame {
         scrollText = arr[IDX_NBT_TEXT];
         scrollAuthor = arr[IDX_NBT_AUTHOR];
 
-        try { stampCount = Integer.parseInt(arr[IDX_STAMP_COUNT]); } catch (Exception e) { stampCount = 0; }
-        try { stampColors[0] = Integer.parseInt(arr[IDX_STAMP_COLOR0]); } catch (Exception e) { stampColors[0] = -1; }
-        try { stampColors[1] = Integer.parseInt(arr[IDX_STAMP_COLOR1]); } catch (Exception e) { stampColors[1] = -1; }
-        try { stampColors[2] = Integer.parseInt(arr[IDX_STAMP_COLOR2]); } catch (Exception e) { stampColors[2] = -1; }
+        try {
+            stampCount = Integer.parseInt(arr[IDX_STAMP_COUNT]);
+        } catch (Exception e) {
+            stampCount = 0;
+        }
+        try {
+            stampColors[0] = Integer.parseInt(arr[IDX_STAMP_COLOR0]);
+        } catch (Exception e) {
+            stampColors[0] = -1;
+        }
+        try {
+            stampColors[1] = Integer.parseInt(arr[IDX_STAMP_COLOR1]);
+        } catch (Exception e) {
+            stampColors[1] = -1;
+        }
+        try {
+            stampColors[2] = Integer.parseInt(arr[IDX_STAMP_COLOR2]);
+        } catch (Exception e) {
+            stampColors[2] = -1;
+        }
 
-        try { paperColor = Integer.parseInt(arr[IDX_PAPER_COLOR]); } catch (Exception e) { paperColor = 0; }
-        try { inkColor = Integer.parseInt(arr[IDX_INK_COLOR]); } catch (Exception e) { inkColor = 15; }
+        try {
+            paperColor = Integer.parseInt(arr[IDX_PAPER_COLOR]);
+        } catch (Exception e) {
+            paperColor = 0;
+        }
+        try {
+            inkColor = Integer.parseInt(arr[IDX_INK_COLOR]);
+        } catch (Exception e) {
+            inkColor = 15;
+        }
 
         // Now push to watcher so clients receive updated data
         setMultiArray(arr);
@@ -197,7 +219,7 @@ public class EntityHangingScroll extends EntityItemFrame {
     @Override
     public void onBroken(Entity breaker) {
         if (breaker instanceof EntityPlayer && ((EntityPlayer) breaker).capabilities.isCreativeMode) return;
-        ItemStack drop = new ItemStack(ModItems.scrollColored, 1, paperColor);
+        ItemStack drop = new ItemStack(ModItems.scroll, 1, paperColor);
 
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString(ItemScroll.NBT_PAGE, scrollText);

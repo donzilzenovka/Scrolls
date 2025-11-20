@@ -1,8 +1,8 @@
 package com.drzenovka.scrolls.common.util;
 
-import com.drzenovka.scrolls.common.init.ModOreDict;
 import net.minecraft.util.EnumChatFormatting;
 
+import com.drzenovka.scrolls.common.init.ModOreDict;
 
 public class ColorUtils {
 
@@ -33,24 +33,10 @@ public class ColorUtils {
         { 0.11f, 0.11f, 0.11f } // black
     };
 
-    public static final String[] DYE_NAME_LIST = {
-        ModOreDict.DYE_WHITE,
-        ModOreDict.DYE_ORANGE,
-        ModOreDict.DYE_MAGENTA,
-        ModOreDict.DYE_LIGHT_BLUE,
-        ModOreDict.DYE_YELLOW,
-        ModOreDict.DYE_LIME,
-        ModOreDict.DYE_PINK,
-        ModOreDict.DYE_GRAY,
-        ModOreDict.DYE_LIGHT_GRAY,
-        ModOreDict.DYE_CYAN,
-        ModOreDict.DYE_PURPLE,
-        ModOreDict.DYE_BLUE,
-        ModOreDict.DYE_BROWN,
-        ModOreDict.DYE_GREEN,
-        ModOreDict.DYE_RED,
-        ModOreDict.DYE_BLACK
-    };
+    public static final String[] DYE_NAME_LIST = { ModOreDict.DYE_WHITE, ModOreDict.DYE_ORANGE, ModOreDict.DYE_MAGENTA,
+        ModOreDict.DYE_LIGHT_BLUE, ModOreDict.DYE_YELLOW, ModOreDict.DYE_LIME, ModOreDict.DYE_PINK, ModOreDict.DYE_GRAY,
+        ModOreDict.DYE_LIGHT_GRAY, ModOreDict.DYE_CYAN, ModOreDict.DYE_PURPLE, ModOreDict.DYE_BLUE,
+        ModOreDict.DYE_BROWN, ModOreDict.DYE_GREEN, ModOreDict.DYE_RED, ModOreDict.DYE_BLACK };
 
     /** Returns a safe color name by index (0–15). Defaults to "white" if out of bounds. */
     public static String getColorName(int index) {

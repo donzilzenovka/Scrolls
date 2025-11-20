@@ -1,11 +1,5 @@
 package com.drzenovka.scrolls.common.util;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.drzenovka.scrolls.common.init.ModOreDict.DYE_BLACK;
 import static com.drzenovka.scrolls.common.init.ModOreDict.DYE_BLUE;
 import static com.drzenovka.scrolls.common.init.ModOreDict.DYE_BROWN;
@@ -23,12 +17,19 @@ import static com.drzenovka.scrolls.common.init.ModOreDict.DYE_RED;
 import static com.drzenovka.scrolls.common.init.ModOreDict.DYE_WHITE;
 import static com.drzenovka.scrolls.common.init.ModOreDict.DYE_YELLOW;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+
 public class DyeColorMap {
+
     private static final Map<String, Integer> DYE_TO_COLOR = new HashMap<>();
 
     static {
-        DYE_TO_COLOR.put(DYE_WHITE,   0);
-        DYE_TO_COLOR.put(DYE_ORANGE,  1);
+        DYE_TO_COLOR.put(DYE_WHITE, 0);
+        DYE_TO_COLOR.put(DYE_ORANGE, 1);
         DYE_TO_COLOR.put(DYE_MAGENTA, 2);
         DYE_TO_COLOR.put(DYE_LIGHT_BLUE, 3);
         DYE_TO_COLOR.put(DYE_YELLOW, 4);

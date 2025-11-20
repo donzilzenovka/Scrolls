@@ -1,10 +1,10 @@
 package com.drzenovka.scrolls.common.handler;
 
-import com.drzenovka.scrolls.client.gui.GuiScroll;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
+import com.drzenovka.scrolls.client.gui.GuiScroll;
 import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
 
 import cpw.mods.fml.common.network.IGuiHandler;

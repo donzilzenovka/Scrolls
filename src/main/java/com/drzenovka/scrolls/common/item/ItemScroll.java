@@ -1,10 +1,11 @@
 package com.drzenovka.scrolls.common.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import static com.drzenovka.scrolls.common.core.Scrolls.scrollsTab;
+
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -19,7 +20,8 @@ import com.drzenovka.scrolls.client.gui.GuiScroll;
 import com.drzenovka.scrolls.common.entity.EntityHangingScroll;
 import com.drzenovka.scrolls.common.util.ColorUtils;
 
-import java.util.List;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemScroll extends Item {
 
@@ -37,10 +39,21 @@ public class ItemScroll extends Item {
 
     public ItemScroll() {
         this.setUnlocalizedName("scroll")
-            .setHasSubtypes(true)
-            .setMaxDamage(0)
             .setMaxStackSize(1)
-            .setCreativeTab(CreativeTabs.tabMisc);
+            .setCreativeTab(scrollsTab);
+    }
+
+    @Override
+    public int getColorFromItemStack(ItemStack stack, int pass) {
+        int color = 0;
+        if (stack.hasTagCompound()) {
+            NBTTagCompound tag = stack.getTagCompound();
+            color = pass == 0 ? tag.getInteger(ItemScroll.PAPER_COLOR) : tag.getInteger(ItemScroll.INK_COLOR);
+        }
+        return ColorUtils.rgbToHex(
+            ColorUtils.GL11_COLOR_VALUES[color][0],
+            ColorUtils.GL11_COLOR_VALUES[color][1],
+            ColorUtils.GL11_COLOR_VALUES[color][2]);
     }
 
     @Override
@@ -49,13 +62,12 @@ public class ItemScroll extends Item {
     }
 
     @Override
-    public void registerIcons(IIconRegister reg){
+    public void registerIcons(IIconRegister reg) {
         this.baseIcon = reg.registerIcon("scrolls:scroll_base");
         this.overlayIcon = reg.registerIcon("scrolls:scroll_overlay");
     }
 
-
-    public IIcon getIcon(ItemStack stack, int pass){
+    public IIcon getIcon(ItemStack stack, int pass) {
         return pass == 0 ? baseIcon : overlayIcon;
     }
 
@@ -65,15 +77,6 @@ public class ItemScroll extends Item {
         if (meta < 0 || meta >= ColorUtils.COLOR_NAMES.length) meta = 0;
         return "item.scroll.colored." + ColorUtils.COLOR_NAMES[meta];
     }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
-        for (int i = 0; i < ColorUtils.COLOR_NAMES.length; i++) {
-            list.add(new ItemStack(item, 1, i));
-        }
-    }
-
 
     /** Initialize NBT for a new scroll */
     protected void initNBT(ItemStack stack) {
@@ -88,7 +91,7 @@ public class ItemScroll extends Item {
                 tag.setInteger(STAMP_COLOR + i, -1);
             }
             tag.setInteger(PAPER_COLOR, this.getDamage(stack));
-            tag.setInteger(INK_COLOR, 15);
+            tag.setInteger(INK_COLOR, 0);
 
             stack.setTagCompound(tag);
         }
@@ -168,7 +171,6 @@ public class ItemScroll extends Item {
         }
         return true;
     }
-
 
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isSelected) {

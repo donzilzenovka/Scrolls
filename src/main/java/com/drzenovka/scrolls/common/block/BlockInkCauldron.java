@@ -1,19 +1,21 @@
 package com.drzenovka.scrolls.common.block;
 
-import com.drzenovka.scrolls.common.init.ModItems;
-import com.drzenovka.scrolls.common.init.ModOreDict;
-import com.drzenovka.scrolls.common.item.ItemInkBottle;
-import com.drzenovka.scrolls.common.tileentity.TileEntityInkCauldron;
-import com.drzenovka.scrolls.common.util.DyeColorMap;
-import com.drzenovka.scrolls.common.util.Utils;
+import static com.drzenovka.scrolls.common.core.Scrolls.scrollsTab;
+
 import net.minecraft.block.BlockCauldron;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import com.drzenovka.scrolls.common.init.ModItems;
+import com.drzenovka.scrolls.common.init.ModOreDict;
+import com.drzenovka.scrolls.common.item.ItemInkBottle;
+import com.drzenovka.scrolls.common.tileentity.TileEntityInkCauldron;
+import com.drzenovka.scrolls.common.util.DyeColorMap;
+import com.drzenovka.scrolls.common.util.Utils;
 
 public class BlockInkCauldron extends BlockCauldron {
 
@@ -23,7 +25,7 @@ public class BlockInkCauldron extends BlockCauldron {
         this.setResistance(30.f);
         this.setBlockName("inkCauldron");
         this.setBlockTextureName("cauldron");
-        this.setCreativeTab(CreativeTabs.tabMisc);
+        this.setCreativeTab(scrollsTab);
     }
 
     @Override
@@ -37,8 +39,8 @@ public class BlockInkCauldron extends BlockCauldron {
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player,
-                                    int side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
+        float hitY, float hitZ) {
 
         TileEntity te = world.getTileEntity(x, y, z);
         if (!(te instanceof TileEntityInkCauldron)) return false;
@@ -54,11 +56,11 @@ public class BlockInkCauldron extends BlockCauldron {
                     inkCauldron.decrementLevel(1);
 
                     ItemStack resultBottle;
-                    if (inkCauldron.getColorMeta() == -1){
+                    if (inkCauldron.getColorMeta() == -1) {
                         resultBottle = new ItemStack(Items.potionitem, 1, 0); // water
                     } else {
                         resultBottle = new ItemStack(ModItems.inkBottle);
-                        ItemInkBottle.setUses(resultBottle, 0); //set 0 due to reverse ink bottle logic
+                        ItemInkBottle.setUses(resultBottle, 0); // set 0 due to reverse ink bottle logic
                         resultBottle.setItemDamage(inkCauldron.getColorMeta());
                     }
 
@@ -85,11 +87,13 @@ public class BlockInkCauldron extends BlockCauldron {
                     if (inkCauldron.getLevel() < 3) {
                         inkCauldron.setWater();
                         inkCauldron.setLevel(3);
-                    } else {return true;}
+                    } else {
+                        return true;
+                    }
                     if (!player.capabilities.isCreativeMode) {
                         held.stackSize--;
-                        if (held.stackSize <= 0)
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.bucket));
+                        if (held.stackSize <= 0) player.inventory
+                            .setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.bucket));
                     }
 
                     player.openContainer.detectAndSendChanges();
@@ -107,11 +111,13 @@ public class BlockInkCauldron extends BlockCauldron {
                     if (inkCauldron.getLevel() < 3) {
                         inkCauldron.setWater();
                         inkCauldron.setLevel(inkCauldron.getLevel() + 1);
-                    } else {return true;}
+                    } else {
+                        return true;
+                    }
                     if (!player.capabilities.isCreativeMode) {
                         held.stackSize--;
-                        if (held.stackSize <= 0)
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.glass_bottle));
+                        if (held.stackSize <= 0) player.inventory
+                            .setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.glass_bottle));
                     }
 
                     player.openContainer.detectAndSendChanges();
@@ -123,7 +129,7 @@ public class BlockInkCauldron extends BlockCauldron {
         }
         // ---------- White Paper -----
         if (held.getItem() == Items.paper) {
-            if (!inkCauldron.isWater() && inkCauldron.getLevel() > 0){
+            if (!inkCauldron.isWater() && inkCauldron.getLevel() > 0) {
                 if (!world.isRemote) {
                     int dyeMeta = inkCauldron.getColorMeta();
                     inkCauldron.setLevel(inkCauldron.getLevel() - 1);
@@ -149,10 +155,10 @@ public class BlockInkCauldron extends BlockCauldron {
 
             if (inkCauldron.isWater() && inkCauldron.getLevel() > 0) {
                 if (!world.isRemote) {
-                    //System.out.println(held);
+                    // System.out.println(held);
                     int dyeMeta = DyeColorMap.getColorForStack(held);
-                    inkCauldron.setInk(dyeMeta);  // set color
-                    //inkCauldron.incrementLevel(1); // top up level
+                    inkCauldron.setInk(dyeMeta); // set color
+                    // inkCauldron.incrementLevel(1); // top up level
 
                     if (!player.capabilities.isCreativeMode) {
                         held.stackSize--;

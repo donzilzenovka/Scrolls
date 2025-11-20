@@ -10,7 +10,8 @@ public class Utils {
 
         int[] ids = OreDictionary.getOreIDs(stack);
         for (int id : ids) {
-            if (OreDictionary.getOreName(id).equals(key)) {
+            if (OreDictionary.getOreName(id)
+                .equals(key)) {
                 return true;
             }
         }
