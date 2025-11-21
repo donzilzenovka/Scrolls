@@ -12,6 +12,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -199,4 +200,16 @@ public class ItemInkBottle extends Item {
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         setUses(stack, 0); // starts empty counter
     }
+
+    public static void consumeEntireBottle(ItemStack stack, InventoryCrafting inv) {
+        // Replace this bottle instance directly in the crafting grid
+        for (int i = 0; i < inv.getSizeInventory(); i++) {
+            ItemStack slot = inv.getStackInSlot(i);
+            if (slot == stack) {
+                inv.setInventorySlotContents(i, null); // bottle is gone
+                return;
+            }
+        }
+    }
+
 }

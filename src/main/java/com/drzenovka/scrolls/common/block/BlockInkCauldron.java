@@ -2,11 +2,15 @@ package com.drzenovka.scrolls.common.block;
 
 import static com.drzenovka.scrolls.common.core.Scrolls.scrollsTab;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -71,6 +75,30 @@ public class BlockInkCauldron extends BlockCauldron {
                     if (!player.inventory.addItemStackToInventory(resultBottle)) {
                         player.dropPlayerItemWithRandomChoice(resultBottle, false);
                     }
+                    player.openContainer.detectAndSendChanges();
+
+                    inkCauldron.markDirty();
+                    world.markBlockForUpdate(x, y, z);
+                }
+                return true;
+            }
+        }
+
+        // ---------- Empty bottle ----------
+        if (held.getItem() == ModItems.inkBottle) {
+            NBTTagCompound tag = held.getTagCompound();
+
+            if (!tag.hasNoTags()) {
+                int uses = tag.getInteger("uses");
+                if (uses > 0) return true;
+            }
+
+            if (!inkCauldron.isWater() && inkCauldron.getColorMeta() == held.getItemDamage() && inkCauldron.getLevel() < 3
+                || inkCauldron.getLevel() == 0) {
+                if (!world.isRemote) {
+                    inkCauldron.incrementLevel(1);
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.glass_bottle));
+
                     player.openContainer.detectAndSendChanges();
 
                     inkCauldron.markDirty();
@@ -150,6 +178,29 @@ public class BlockInkCauldron extends BlockCauldron {
             }
         }
 
+        // ---------- White Wool -----
+        if (isHoldingBlock(player, Blocks.wool, 0)){
+            if (!inkCauldron.isWater() && inkCauldron.getLevel() > 0) {
+                if (!world.isRemote) {
+                    int dyeMeta = inkCauldron.getColorMeta();
+                    inkCauldron.setLevel(inkCauldron.getLevel() - 1);
+                    ItemStack result = new ItemStack(Blocks.wool, 1, dyeMeta);
+                    held.stackSize--;
+                    if (held.stackSize <= 0)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+
+                    if (!player.inventory.addItemStackToInventory(result)) {
+                        player.dropPlayerItemWithRandomChoice(result, false);
+                    }
+                    player.openContainer.detectAndSendChanges();
+
+                    inkCauldron.markDirty();
+                    world.markBlockForUpdate(x, y, z);
+                }
+                return true;
+            }
+        }
+
         // ---------- Add dye ----------
         if (Utils.isOreDictItem(held, ModOreDict.DYE)) {
 
@@ -179,4 +230,14 @@ public class BlockInkCauldron extends BlockCauldron {
     public Item getItemDropped(int meta, java.util.Random random, int fortune) {
         return Item.getItemFromBlock(this);
     }
+
+    public static boolean isHoldingBlock(EntityPlayer player, Block block, int meta) {
+        ItemStack stack = player.getHeldItem();
+        if (stack == null || !(stack.getItem() instanceof ItemBlock)) {
+            return false;
+        }
+        ItemBlock itemBlock = (ItemBlock) stack.getItem();
+        return itemBlock.field_150939_a == block && stack.getItemDamage() == meta;
+    }
+
 }

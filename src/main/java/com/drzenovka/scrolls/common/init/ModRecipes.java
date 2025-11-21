@@ -31,9 +31,16 @@ public class ModRecipes {
                     DYE_NAME_LIST[i]));
         }
 
+        GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.inkCauldron),
+            "I I",
+            "IBI",
+            "III",
+            'I', Items.iron_ingot,
+            'B', Items.bucket);
+
         // StampedScrolls
         GameRegistry.addRecipe(new RecipeStampScroll());
-        GameRegistry.addRecipe(new RecipeColoredScroll());
+        GameRegistry.addRecipe(new RecipeScroll());
 
         RecipeSorter.register(
             "scrolls:recipe_stamp_scroll",
@@ -42,8 +49,8 @@ public class ModRecipes {
             "after:minecraft:shapeless");
 
         RecipeSorter.register(
-            "scrolls:recipe_colored_scroll",
-            RecipeColoredScroll.class,
+            "scrolls:recipe_scroll",
+            RecipeScroll.class,
             RecipeSorter.Category.SHAPELESS,
             "after:minecraft:shapeless");
     }

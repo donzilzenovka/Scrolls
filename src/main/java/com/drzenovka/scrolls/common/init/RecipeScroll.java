@@ -4,6 +4,7 @@ import static com.drzenovka.scrolls.common.init.ModOreDict.INK;
 import static com.drzenovka.scrolls.common.init.ModOreDict.PARCHMENT;
 import static com.drzenovka.scrolls.common.init.ModOreDict.QUILL;
 
+import com.drzenovka.scrolls.common.item.ItemInkBottle;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -14,13 +15,13 @@ import com.drzenovka.scrolls.common.item.ItemScroll;
 import com.drzenovka.scrolls.common.util.DyeColorMap;
 import com.drzenovka.scrolls.common.util.Utils;
 
-public class RecipeColoredScroll implements IRecipe {
+public class RecipeScroll implements IRecipe {
 
     @Override
     public boolean matches(InventoryCrafting inv, World world) {
         boolean foundPaper = false;
         boolean foundFeather = false;
-        boolean foundDye = false;
+        boolean foundInk = false;
 
         for (int i = 0; i < inv.getSizeInventory(); i++) {
             ItemStack stack = inv.getStackInSlot(i);
@@ -33,18 +34,19 @@ public class RecipeColoredScroll implements IRecipe {
                 if (foundFeather) return false;
                 foundFeather = true;
             } else if (Utils.isOreDictItem(stack, INK)) {
-                if (foundDye) return false;
-                foundDye = true;
+                if (foundInk) return false;
+                foundInk = true;
             } else {
                 return false; // invalid extra items
             }
         }
-        return foundPaper && foundFeather && foundDye;
+        return foundPaper && foundFeather && foundInk;
     }
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
         ItemStack paper = null;
+        ItemStack inkBottle = null;
         int dyeMeta = -1;
 
         // find paper & dye
@@ -55,7 +57,10 @@ public class RecipeColoredScroll implements IRecipe {
             if (Utils.isOreDictItem(stack, PARCHMENT)) {
                 paper = stack;
             } else if (Utils.isOreDictItem(stack, INK)) {
+                inkBottle = stack;
                 dyeMeta = DyeColorMap.getColorForStack(stack);
+
+                inv.setInventorySlotContents(i, null);
             }
         }
 
