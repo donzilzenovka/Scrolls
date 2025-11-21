@@ -1,5 +1,6 @@
 package com.drzenovka.scrolls.common.core;
 
+import com.drzenovka.scrolls.common.tileentity.TileEntityStamp;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.logging.log4j.LogManager;
@@ -71,6 +72,7 @@ public class Scrolls {
         ModOreDict.init();
 
         GameRegistry.registerTileEntity(TileEntityInkCauldron.class, "tileEntityInkCauldron");
+        GameRegistry.registerTileEntity(TileEntityStamp.class, "tileEntityStamp");
 
     }
 

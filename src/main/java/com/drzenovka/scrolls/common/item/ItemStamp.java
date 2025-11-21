@@ -2,16 +2,18 @@ package com.drzenovka.scrolls.common.item;
 
 import static com.drzenovka.scrolls.common.core.Scrolls.scrollsTab;
 
-import net.minecraft.item.Item;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-public class ItemStamp extends Item {
+public class ItemStamp extends ItemBlock {
 
-    public ItemStamp() {
+    public ItemStamp(Block block) {
+        super(block);
         this.setUnlocalizedName("stamp")
-            .setTextureName("scrolls:stamp")
             .setMaxStackSize(1)
             .setContainerItem(this)
+            .setFull3D()
             .setCreativeTab(scrollsTab);
     }
 

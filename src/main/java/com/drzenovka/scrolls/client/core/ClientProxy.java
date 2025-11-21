@@ -1,5 +1,9 @@
 package com.drzenovka.scrolls.client.core;
 
+
+
+import com.drzenovka.scrolls.client.renderer.entity.RenderStamp;
+import com.drzenovka.scrolls.common.tileentity.TileEntityStamp;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.MinecraftForgeClient;
 
@@ -33,6 +37,7 @@ public class ClientProxy extends CommonProxy {
         MinecraftForgeClient.registerItemRenderer(ModItems.inkBottle, new RenderInkBottle());
         MinecraftForgeClient.registerItemRenderer(ModItems.scroll, new RenderScroll());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInkCauldron.class, new RenderInkCauldron());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStamp.class, new RenderStamp());
 
     }
 

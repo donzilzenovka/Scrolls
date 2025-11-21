@@ -10,6 +10,7 @@ import com.drzenovka.scrolls.common.item.ItemWax;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
+
 public class ModItems {
 
     public static ItemScroll scroll;
@@ -22,13 +23,13 @@ public class ModItems {
         scroll = new ItemScroll();
         wax = new ItemWax();
         paperColored = new ItemPaperColored();
-        stamp = new ItemStamp();
+        //stamp = new ItemStamp(ModBlocks.blockStamp);
         inkBottle = new ItemInkBottle();
 
         GameRegistry.registerItem(scroll, "scroll");
         GameRegistry.registerItem(wax, "wax");
         GameRegistry.registerItem(paperColored, "paperColored");
-        GameRegistry.registerItem(stamp, "stamp");
+        //GameRegistry.registerItem(stamp, "stamp");
         GameRegistry.registerItem(inkBottle, "inkBottle");
 
     }
