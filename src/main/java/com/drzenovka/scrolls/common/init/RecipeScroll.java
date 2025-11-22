@@ -5,6 +5,7 @@ import static com.drzenovka.scrolls.common.init.ModOreDict.PARCHMENT;
 import static com.drzenovka.scrolls.common.init.ModOreDict.QUILL;
 
 import com.drzenovka.scrolls.common.item.ItemInkBottle;
+import com.drzenovka.scrolls.common.util.ColorUtils;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -58,9 +59,9 @@ public class RecipeScroll implements IRecipe {
                 paper = stack;
             } else if (Utils.isOreDictItem(stack, INK)) {
                 inkBottle = stack;
-                dyeMeta = DyeColorMap.getColorForStack(stack);
+                dyeMeta = ColorUtils.getColorForStack(stack);
 
-                inv.setInventorySlotContents(i, null);
+                //inv.setInventorySlotContents(i, null);
             }
         }
 

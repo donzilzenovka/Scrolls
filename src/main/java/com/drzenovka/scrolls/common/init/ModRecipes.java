@@ -44,15 +44,7 @@ public class ModRecipes {
             'I', Items.iron_ingot,
             'B', Items.bucket);
 
-        // StampedScrolls
-        GameRegistry.addRecipe(new RecipeStampScroll());
         GameRegistry.addRecipe(new RecipeScroll());
-
-        RecipeSorter.register(
-            "scrolls:recipe_stamp_scroll",
-            RecipeStampScroll.class,
-            RecipeSorter.Category.SHAPELESS,
-            "after:minecraft:shapeless");
 
         RecipeSorter.register(
             "scrolls:recipe_scroll",

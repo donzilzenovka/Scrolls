@@ -2,6 +2,7 @@ package com.drzenovka.scrolls.common.block;
 
 import static com.drzenovka.scrolls.common.core.Scrolls.scrollsTab;
 
+import com.drzenovka.scrolls.common.util.ColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.entity.player.EntityPlayer;
@@ -207,7 +208,7 @@ public class BlockInkCauldron extends BlockCauldron {
             if (inkCauldron.isWater() && inkCauldron.getLevel() > 0) {
                 if (!world.isRemote) {
                     // System.out.println(held);
-                    int dyeMeta = DyeColorMap.getColorForStack(held);
+                    int dyeMeta = ColorUtils.getColorForStack(held);
                     inkCauldron.setInk(dyeMeta); // set color
                     // inkCauldron.incrementLevel(1); // top up level
 

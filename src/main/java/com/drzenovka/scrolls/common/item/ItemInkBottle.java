@@ -146,7 +146,7 @@ public class ItemInkBottle extends Item {
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target) {
         if (target instanceof EntitySheep) {
             EntitySheep sheep = (EntitySheep) target;
-            int dyeColorID = DyeColorMap.getColorForStack(stack);
+            int dyeColorID = ColorUtils.getColorForStack(stack);
 
             // Check on the SERVER only
             if (!sheep.worldObj.isRemote && !sheep.getSheared() && sheep.getFleeceColor() != dyeColorID) {
