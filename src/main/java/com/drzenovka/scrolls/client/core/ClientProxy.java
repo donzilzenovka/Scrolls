@@ -33,11 +33,13 @@ public class ClientProxy extends CommonProxy {
     }
 
     public void registerRenderers() {
+        RenderStamp stampRenderer = new RenderStamp();
         RenderingRegistry.registerEntityRenderingHandler(EntityHangingScroll.class, new RenderHangingScroll());
         MinecraftForgeClient.registerItemRenderer(ModItems.inkBottle, new RenderInkBottle());
         MinecraftForgeClient.registerItemRenderer(ModItems.scroll, new RenderScroll());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInkCauldron.class, new RenderInkCauldron());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStamp.class, new RenderStamp());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStamp.class, stampRenderer);
+        TileEntityStamp.globalTESR = stampRenderer;
 
     }
 

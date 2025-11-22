@@ -1,5 +1,8 @@
 package com.drzenovka.scrolls.common.util;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -16,5 +19,9 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static Block getBlockFromItem(Item item) {
+        return item instanceof ItemBlock ? ((ItemBlock) item).field_150939_a : null;
     }
 }

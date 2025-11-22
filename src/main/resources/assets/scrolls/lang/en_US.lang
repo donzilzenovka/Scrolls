@@ -100,10 +100,11 @@ item.ink_bottle.10.name=Purple Ink Bottle
 item.ink_bottle.11.name=Blue Ink Bottle
 item.ink_bottle.12.name=Brown Ink Bottle
 item.ink_bottle.13.name=Green Ink Bottle
-item.ink_bottle.14.name=red Ink Bottle
+item.ink_bottle.14.name=Red Ink Bottle
 item.ink_bottle.15.name=Black Ink Bottle
 
 tile.inkCauldron.name=Ink Cauldron
+tile.stamp.name=Stamp
 
 itemGroup.scrolls=Scrolls
 

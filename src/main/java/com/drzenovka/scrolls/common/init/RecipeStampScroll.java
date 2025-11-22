@@ -2,7 +2,9 @@ package com.drzenovka.scrolls.common.init;
 
 import static com.drzenovka.scrolls.common.init.ModOreDict.INK;
 
+import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,9 +32,12 @@ public class RecipeStampScroll implements IRecipe {
                 // Prevent adding stamps if already 3
                 NBTTagCompound tag = stack.getTagCompound();
                 if (tag != null && tag.getInteger("stampCount") >= 3) return false;
-            } else if (stack.getItem() == ModItems.stamp) {
-                if (foundStamp) return false;
-                foundStamp = true;
+            } else if (stack.getItem() instanceof ItemBlock) {
+                Block block = ((ItemBlock) stack.getItem()).field_150939_a;
+                if (block == ModBlocks.stamp) {
+                    if (foundStamp) return false;
+                    foundStamp = true;
+                }
             } else if (Utils.isOreDictItem(stack, INK)) {
                 if (foundDye) return false;
                 foundDye = true;

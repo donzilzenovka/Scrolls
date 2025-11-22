@@ -2,6 +2,7 @@ package com.drzenovka.scrolls.common.init;
 
 import static com.drzenovka.scrolls.common.util.ColorUtils.DYE_NAME_LIST;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.RecipeSorter;
@@ -19,8 +20,13 @@ public class ModRecipes {
         }
 
         // debug stamp recipe
-        GameRegistry
-            .addShapelessRecipe(new ItemStack(ModItems.stamp), new ItemStack(Items.potato), new ItemStack(Items.stick));
+        //GameRegistry
+        //    .addShapelessRecipe(new ItemStack(ModItems.stamp), new ItemStack(Items.potato), new ItemStack(Items.stick));
+        GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.stamp),
+            " W ",
+            " I ",
+            'W', new ItemStack(Blocks.planks, 1, 5),
+            'I', Items.iron_ingot);
 
         // Ink Bottles
         for (int i = 1; i < DYE_NAME_LIST.length; i++) {

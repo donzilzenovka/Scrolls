@@ -3,22 +3,40 @@ package com.drzenovka.scrolls.common.block;
 import com.drzenovka.scrolls.common.tileentity.TileEntityStamp;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.util.AxisAlignedBB;
 
 public class BlockStamp extends Block {
 
+    IIcon icon;
+
     public BlockStamp() {
         super(Material.wood);
         this.setBlockName("stamp");
-        this.setHardness(0.5F);
+        this.setHardness(0.0F);
         this.setStepSound(soundTypeWood);
 
         // Tiny bounds: 2x2x5 pixels
         //this.setBlockBounds(0f, 0f, 0f, 2f/16f, 5f/16f, 2f/16f);
         this.setBlockBounds(7f/16f, 0f, 7f/16f, 9f/16f, 5f/16f, 9f/16f);
+
+    }
+
+
+
+    @Override
+    public IIcon getIcon(int side, int meta) {
+        return icon; // particle texture
+    }
+
+    @Override
+    public void registerBlockIcons(IIconRegister reg) {
+        icon = reg.registerIcon("scrolls:stamp");
     }
 
     @Override
@@ -53,5 +71,6 @@ public class BlockStamp extends Block {
     public TileEntity createTileEntity(World world, int metadata) {
         return new TileEntityStamp();
     }
+
 
 }

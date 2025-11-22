@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL12;
 
 public class RenderStamp extends TileEntitySpecialRenderer {
 
+
     @Override
     public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks) {
         GL11.glPushMatrix();
@@ -20,6 +21,7 @@ public class RenderStamp extends TileEntitySpecialRenderer {
 
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         GL11.glEnable(GL11.GL_BLEND);
+
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_LIGHTING);
 
@@ -28,6 +30,7 @@ public class RenderStamp extends TileEntitySpecialRenderer {
 
 // draw 2x5x2 cube in pixel units
         drawCube();
+
 
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_BLEND);
@@ -38,7 +41,7 @@ public class RenderStamp extends TileEntitySpecialRenderer {
 
     private void drawCube() {
         final float P = 1f / 16f; //world pixel
-        final float T = 1f / 32f;  //texture pixel
+        final float T = 1f / 16f;  //texture pixel
         final float W = 2f * P;
         final float H = 5f * P;
         //final float U_END = 2f * P;
